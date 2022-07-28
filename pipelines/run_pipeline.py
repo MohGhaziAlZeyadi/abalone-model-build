@@ -32,6 +32,14 @@ def main():  # pragma: no cover
 
     parser.add_argument(
         "-n",
+        "--training_epochs",
+        dest=" training_epochs",
+        type=str,
+        help="The module number of training_epochs of the pipeline to import.",
+    )
+    
+    parser.add_argument(
+        "-n",
         "--module-name",
         dest="module_name",
         type=str,

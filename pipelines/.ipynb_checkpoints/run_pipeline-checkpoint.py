@@ -32,6 +32,14 @@ def main():  # pragma: no cover
 
     parser.add_argument(
         "-n",
+        "--training_epochs",
+        dest=" training_epochs",
+        type=str,
+        help="The module number of training_epochs of the pipeline to import.",
+    )
+    
+    parser.add_argument(
+        "-n",
         "--module-name",
         dest="module_name",
         type=str,
@@ -81,9 +89,8 @@ def main():  # pragma: no cover
 
         all_tags = get_pipeline_custom_tags(args.module_name, args.kwargs, tags)
 
-        upsert_response = pipeline.upsert(
-            role_arn=args.role_arn, description=args.description, tags=all_tags
-        )
+        upsert_response = pipeline.upsert(role_arn=args.role_arn, description=args.description, tags=all_tags)
+        
         print("\n###### Created/Updated SageMaker Pipeline: Response received:")
         print(upsert_response)
 
