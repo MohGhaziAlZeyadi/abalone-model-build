@@ -128,6 +128,7 @@ def get_pipeline(
     base_job_prefix="Abalone",
     processing_instance_type="ml.m5.xlarge",
     training_instance_type="ml.m5.xlarge",
+    training_epochs = "100"
 ):
     """Gets a SageMaker ML Pipeline instance working with on CustomerChurn data.
 
