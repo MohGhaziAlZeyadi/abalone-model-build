@@ -1,60 +1,30 @@
-"""Feature engineers the abalone dataset."""
+# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"). You
+# may not use this file except in compliance with the License. A copy of
+# the License is located at
+#
+#     http://aws.amazon.com/apache2.0/
+#
+# or in the "license" file accompanying this file. This file is
+# distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+# ANY KIND, either express or implied. See the License for the specific
+# language governing permissions and limitations under the License.
+"""Feature engineers the customer churn dataset."""
 import argparse
 import logging
-import os
 import pathlib
-import requests
-import tempfile
 
 import boto3
 import numpy as np
 import pandas as pd
 
-from sklearn.compose import ColumnTransformer
-from sklearn.impute import SimpleImputer
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
-
-# Since we get a headerless CSV file we specify the column names here.
-feature_columns_names = [
-    "sex",
-    "length",
-    "diameter",
-    "height",
-    "whole_weight",
-    "shucked_weight",
-    "viscera_weight",
-    "shell_weight",
-]
-label_column = "rings"
-
-feature_columns_dtype = {
-    "sex": str,
-    "length": np.float64,
-    "diameter": np.float64,
-    "height": np.float64,
-    "whole_weight": np.float64,
-    "shucked_weight": np.float64,
-    "viscera_weight": np.float64,
-    "shell_weight": np.float64,
-}
-label_column_dtype = {"rings": np.float64}
-
-
-def merge_two_dicts(x, y):
-    """Merges two dicts, returning a new copy."""
-    z = x.copy()
-    z.update(y)
-    return z
-
-
 if __name__ == "__main__":
-    logger.debug("Starting preprocessing.")
+    logger.info("Starting preprocessing.")
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-data", type=str, required=True)
     args = parser.parse_args()
@@ -62,59 +32,49 @@ if __name__ == "__main__":
     base_dir = "/opt/ml/processing"
     pathlib.Path(f"{base_dir}/data").mkdir(parents=True, exist_ok=True)
     input_data = args.input_data
+    print(input_data)
     bucket = input_data.split("/")[2]
     key = "/".join(input_data.split("/")[3:])
 
     logger.info("Downloading data from bucket: %s, key: %s", bucket, key)
-    fn = f"{base_dir}/data/abalone-dataset.csv"
+    fn = f"{base_dir}/data/raw-data.csv"
     s3 = boto3.resource("s3")
     s3.Bucket(bucket).download_file(key, fn)
 
-    logger.debug("Reading downloaded data.")
-    df = pd.read_csv(
-        fn,
-        header=None,
-        names=feature_columns_names + [label_column],
-        dtype=merge_two_dicts(feature_columns_dtype, label_column_dtype),
-    )
-    os.unlink(fn)
+    logger.info("Reading downloaded data.")
 
-    logger.debug("Defining transformers.")
-    numeric_features = list(feature_columns_names)
-    numeric_features.remove("sex")
-    numeric_transformer = Pipeline(
-        steps=[("imputer", SimpleImputer(strategy="median")), ("scaler", StandardScaler())]
-    )
+    # read in csv
+    df = pd.read_csv(fn)
 
-    categorical_features = ["sex"]
-    categorical_transformer = Pipeline(
-        steps=[
-            ("imputer", SimpleImputer(strategy="constant", fill_value="missing")),
-            ("onehot", OneHotEncoder(handle_unknown="ignore")),
-        ]
-    )
+    # drop the "Phone" feature column
+    df = df.drop(["Phone"], axis=1)
 
-    preprocess = ColumnTransformer(
-        transformers=[
-            ("num", numeric_transformer, numeric_features),
-            ("cat", categorical_transformer, categorical_features),
-        ]
+    # Change the data type of "Area Code"
+    df["Area Code"] = df["Area Code"].astype(object)
+
+    # Drop several other columns
+    df = df.drop(["Day Charge", "Eve Charge", "Night Charge", "Intl Charge"], axis=1)
+
+    # Convert categorical variables into dummy/indicator variables.
+    model_data = pd.get_dummies(df)
+
+    # Create one binary classification target column
+    model_data = pd.concat(
+        [
+            model_data["Churn?_True."],
+            model_data.drop(["Churn?_False.", "Churn?_True."], axis=1),
+        ],
+        axis=1,
     )
 
-    logger.info("Applying transforms.")
-    y = df.pop("rings")
-    X_pre = preprocess.fit_transform(df)
-    y_pre = y.to_numpy().reshape(len(y), 1)
+    # Split the data
+    train_data, validation_data, test_data = np.split(
+        model_data.sample(frac=1, random_state=1729),
+        [int(0.7 * len(model_data)), int(0.9 * len(model_data))],
+    )
 
-    X = np.concatenate((y_pre, X_pre), axis=1)
-
-    logger.info("Splitting %d rows of data into train, validation, test datasets.", len(X))
-    np.random.shuffle(X)
-    train, validation, test = np.split(X, [int(0.7 * len(X)), int(0.85 * len(X))])
-
-    logger.info("Writing out datasets to %s.", base_dir)
-    pd.DataFrame(train).to_csv(f"{base_dir}/train/train.csv", header=False, index=False)
-    pd.DataFrame(validation).to_csv(
+    pd.DataFrame(train_data).to_csv(f"{base_dir}/train/train.csv", header=False, index=False)
+    pd.DataFrame(validation_data).to_csv(
         f"{base_dir}/validation/validation.csv", header=False, index=False
     )
-    pd.DataFrame(test).to_csv(f"{base_dir}/test/test.csv", header=False, index=False)
+    pd.DataFrame(test_data).to_csv(f"{base_dir}/test/test.csv", header=False, index=False)
