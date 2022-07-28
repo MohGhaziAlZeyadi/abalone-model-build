@@ -31,7 +31,7 @@ def main():  # pragma: no cover
     )
 
     parser.add_argument(
-        "-n",
+        "-t",
         "--training_epochs",
         dest=" training_epochs",
         type=str,
