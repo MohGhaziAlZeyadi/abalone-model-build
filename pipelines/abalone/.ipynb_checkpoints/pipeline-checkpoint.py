@@ -179,13 +179,13 @@ def get_pipeline(
 #    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
         
-#     image_uri = sagemaker.image_uris.retrieve(
-#         framework="xgboost",  # we are using the Sagemaker built in xgboost algorithm
-#         region=region,
-#         version="1.0-1",
-#         py_version="py3",
-#         instance_type="ml.m5.xlarge",
-#     )
+    image_uri = sagemaker.image_uris.retrieve(
+        framework="xgboost",  # we are using the Sagemaker built in xgboost algorithm
+        region=region,
+        version="1.0-1",
+        py_version="py3",
+        instance_type="ml.m5.xlarge",
+    )
     
     
 #     xgb_train = Estimator(
@@ -268,8 +268,8 @@ def get_pipeline(
     
     #######################################################################################
 
-
-    # Processing step for evaluation
+    
+    Processing step for evaluation
     script_eval = ScriptProcessor(
         image_uri=image_uri,
         command=["python3"],
@@ -306,6 +306,12 @@ def get_pipeline(
         property_files=[evaluation_report],
     )
 
+   
+    
+    
+    
+    
+###################################################################################################################
     # Register model step that will be conditionally executed
     model_metrics = ModelMetrics(
         model_statistics=MetricsSource(
