@@ -147,7 +147,6 @@ def get_pipeline(
     pipeline_session = get_pipeline_session(region, default_bucket)
 
     # Parameters for pipeline execution
-    training_epochs = ParameterString(name="TrainingEpochs", default_value="100")
     processing_instance_count = ParameterInteger(name="ProcessingInstanceCount", default_value=1)
     training_instance_type = ParameterString(name="TrainingInstanceType", default_value="ml.m5.xlarge")
     model_approval_status = ParameterString(name="ModelApprovalStatus",default_value="PendingManualApproval",  # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
@@ -236,7 +235,7 @@ def get_pipeline(
     #model_path = f"s3://{bucket}/{prefix}/model/"
     model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
 
-    hyperparameters = {"epochs": training_epochs}
+    hyperparameters = {"epochs": 100}
     tensorflow_version = "2.4.1"
     python_version = "py37"
 
