@@ -330,7 +330,7 @@ def get_pipeline(
     # Use the evaluate_model_processor in a Sagemaker pipelines ProcessingStep.
     step_eval = ProcessingStep(
     name="CustomerChurnEval",
-    processor=script_eval,
+    processor= evaluate_model_processor, 
             inputs=[
             ProcessingInput(
                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
