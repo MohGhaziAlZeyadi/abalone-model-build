@@ -180,13 +180,13 @@ def get_pipeline(
 #    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
         
-    image_uri = sagemaker.image_uris.retrieve(
-        framework="xgboost",  # we are using the Sagemaker built in xgboost algorithm
-        region=region,
-        version="1.0-1",
-        py_version="py3",
-        instance_type="ml.m5.xlarge",
-    )
+#     image_uri = sagemaker.image_uris.retrieve(
+#         framework="xgboost",  # we are using the Sagemaker built in xgboost algorithm
+#         region=region,
+#         version="1.0-1",
+#         py_version="py3",
+#         instance_type="ml.m5.xlarge",
+#     )
     
     
 #     xgb_train = Estimator(
@@ -270,25 +270,68 @@ def get_pipeline(
     #######################################################################################
 
     
-#Processing step for evaluation
-    script_eval = ScriptProcessor(
-        image_uri=image_uri,
-        command=["python3"],
-        instance_type="ml.m5.xlarge",
-        instance_count=1,
-        base_job_name=f"{base_job_prefix}/script-abalone-eval",
-        sagemaker_session=sagemaker_session,
-        role=role,
+# #Processing step for evaluation
+#     script_eval = ScriptProcessor(
+#         image_uri=image_uri,
+#         command=["python3"],
+#         instance_type="ml.m5.xlarge",
+#         instance_count=1,
+#         base_job_name=f"{base_job_prefix}/script-abalone-eval",
+#         sagemaker_session=sagemaker_session,
+#         role=role,
+#     )
+#     evaluation_report = PropertyFile(
+#         name="EvaluationReport",
+#         output_name="evaluation",
+#         path="evaluation.json",
+#     )
+#     step_eval = ProcessingStep(
+#         name="CustomerChurnEval",
+#         processor=script_eval,
+#         inputs=[
+#             ProcessingInput(
+#                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
+#                 destination="/opt/ml/processing/model",
+#             ),
+#             ProcessingInput(
+#                 source=step_process.properties.ProcessingOutputConfig.Outputs[
+#                     "test"
+#                 ].S3Output.S3Uri,
+#                 destination="/opt/ml/processing/test",
+#             ),
+#         ],
+#         outputs=[
+#             ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation"),
+#         ],
+#         code=os.path.join(BASE_DIR, "evaluate.py"),
+#         property_files=[evaluation_report],
+#     )
+    
+    #framework_version = "0.23-1"
+    from sagemaker.workflow.properties import PropertyFile
+
+    # Create SKLearnProcessor object.
+    # The object contains information about what container to use, what instance type etc.
+    evaluate_model_processor = SKLearnProcessor(
+    framework_version="1.0-1",
+    instance_type="ml.m5.large",
+    instance_count=1,
+    base_job_name=f"{base_job_prefix}/script-abalone-eval",
+    role=role,
     )
+
+    # Create a PropertyFile
+    # A PropertyFile is used to be able to reference outputs from a processing step, for instance to use in a condition step.
+    # For more information, visit https://docs.aws.amazon.com/sagemaker/latest/dg/build-and-manage-propertyfile.html
     evaluation_report = PropertyFile(
-        name="EvaluationReport",
-        output_name="evaluation",
-        path="evaluation.json",
+    name="EvaluationReport", output_name="evaluation", path="evaluation.json"
     )
+
+    # Use the evaluate_model_processor in a Sagemaker pipelines ProcessingStep.
     step_eval = ProcessingStep(
-        name="CustomerChurnEval",
-        processor=script_eval,
-        inputs=[
+    name="CustomerChurnEval",
+    processor=script_eval,
+            inputs=[
             ProcessingInput(
                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
                 destination="/opt/ml/processing/model",
@@ -306,8 +349,6 @@ def get_pipeline(
         code=os.path.join(BASE_DIR, "evaluate.py"),
         property_files=[evaluation_report],
     )
-
-   
     
     
     
