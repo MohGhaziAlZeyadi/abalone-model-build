@@ -152,8 +152,9 @@ def get_pipeline(
 )
     input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/DEMO-xgboost-churn/data/RawData.csv",# Change this to point to the s3 location of your raw input data.
     )
-
-    # Processing step for feature engineering
+#################################################
+# Processing step for feature engineering
+##################################################
     sklearn_processor = SKLearnProcessor(
         framework_version="1.0-1",
         instance_type=processing_instance_type,
@@ -174,8 +175,9 @@ def get_pipeline(
         job_arguments=["--input-data", input_data],
     )
 
-    
-    # Training step for generating model artifacts
+#################################################    
+# Training step for generating model artifacts
+#################################################
     model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
         
@@ -218,8 +220,9 @@ def get_pipeline(
             TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["validation"].S3Output.S3Uri,content_type="text/csv",),
         },
     )
-
-    # Processing step for evaluation
+#################################################
+# Processing step for evaluation
+#################################################
     script_eval = ScriptProcessor(
         image_uri=image_uri,
         command=["python3"],
@@ -255,8 +258,10 @@ def get_pipeline(
         code=os.path.join(BASE_DIR, "evaluate.py"),
         property_files=[evaluation_report],
     )
-
-    # Register model step that will be conditionally executed
+    
+#################################################
+# Register model step that will be conditionally executed
+#################################################
     model_metrics = ModelMetrics(
         model_statistics=MetricsSource(
             s3_uri="{}/evaluation.json".format(
@@ -280,7 +285,9 @@ def get_pipeline(
         model_metrics=model_metrics,
     )
 
-    # Condition step for evaluating model quality and branching execution
+#################################################
+# Condition step for evaluating model quality and branching execution
+#################################################
     cond_lte = ConditionGreaterThanOrEqualTo(  # You can change the condition here
         left=JsonGet(
             step_name=step_eval.name,
@@ -296,7 +303,9 @@ def get_pipeline(
         else_steps=[],
     )
 
-    # Pipeline instance
+#################################################
+# Pipeline instance
+#################################################
     pipeline = Pipeline(
         name=pipeline_name,
         parameters=[
