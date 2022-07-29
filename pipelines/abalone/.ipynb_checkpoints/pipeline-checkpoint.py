@@ -157,7 +157,7 @@ def get_pipeline(
     model_approval_status = ParameterString(name="ModelApprovalStatus",default_value="PendingManualApproval",  # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
     
     # raw input data
-    input_data = ParameterString(name="InputData", default_value=raw_s3)
+    #input_data = ParameterString(name="InputData", default_value=raw_s3)
 
     # training step parameters
     #training_epochs = ParameterString(name="TrainingEpochs", default_value="100")
