@@ -160,7 +160,7 @@ def get_pipeline(
     input_data = ParameterString(name="InputData", default_value=raw_s3)
 
     # training step parameters
-    training_epochs = ParameterString(name="TrainingEpochs", default_value="100")
+    #training_epochs = ParameterString(name="TrainingEpochs", default_value="100")
 
     # model performance step parameters
     accuracy_mse_threshold = ParameterFloat(name="AccuracyMseThreshold", default_value=0.75)
@@ -224,7 +224,7 @@ def get_pipeline(
     model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
     
-    hyperparameters = {"epochs": training_epochs}
+    hyperparameters = {"epochs": 100}
     tensorflow_version = "2.4.1"
     python_version = "py37"
 
