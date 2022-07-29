@@ -327,7 +327,7 @@ def get_pipeline(
     )
 
     # Use the evaluate_model_processor in a Sagemaker pipelines ProcessingStep.
-    step_evaluate_model = ProcessingStep(
+       step_eval = ProcessingStep(
         name="Evaluate-California-Housing-Model",
         processor=evaluate_model_processor,
         inputs=[
@@ -429,7 +429,7 @@ def get_pipeline(
     # Models with a test accuracy lower than the condition will not be registered with the model registry.
     cond_lte = ConditionLessThanOrEqualTo(
         left=JsonGet(
-            step_name=step_evaluate_model.name,
+            step_name=step_eval.name,
             property_file=evaluation_report,
             json_path="regression_metrics.mse.value",
         ),

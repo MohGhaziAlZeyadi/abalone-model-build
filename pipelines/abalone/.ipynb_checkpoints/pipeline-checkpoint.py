@@ -171,6 +171,7 @@ def get_pipeline(
     
     
     
+    
     #input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/DEMO-xgboost-churn/data/RawData.csv",# Change this to point to the s3 location of your raw input data.
     
     input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/CaliforniaHousingPricesData/	housing.csv",# Change this to point to the s3 location of your raw input data.
@@ -249,13 +250,13 @@ def get_pipeline(
         estimator=tf2_estimator,
         inputs={
             "train": TrainingInput(
-                s3_data=step_preprocess_data.properties.ProcessingOutputConfig.Outputs[
+                s3_data=step_process.properties.ProcessingOutputConfig.Outputs[
                     "train"
                 ].S3Output.S3Uri,
                 content_type="text/csv",
             ),
             "test": TrainingInput(
-                s3_data=step_preprocess_data.properties.ProcessingOutputConfig.Outputs[
+                s3_data=step_process.properties.ProcessingOutputConfig.Outputs[
                     "test"
                 ].S3Output.S3Uri,
                 content_type="text/csv",
@@ -326,7 +327,7 @@ def get_pipeline(
     )
 
     # Use the evaluate_model_processor in a Sagemaker pipelines ProcessingStep.
-    step_evaluate_model = ProcessingStep(
+       step_eval = ProcessingStep(
         name="Evaluate-California-Housing-Model",
         processor=evaluate_model_processor,
         inputs=[
@@ -335,7 +336,7 @@ def get_pipeline(
                 destination="/opt/ml/processing/model",
             ),
             ProcessingInput(
-                source=step_preprocess_data.properties.ProcessingOutputConfig.Outputs[
+                source=step_process.properties.ProcessingOutputConfig.Outputs[
                     "test"
                 ].S3Output.S3Uri,
                 destination="/opt/ml/processing/test",
@@ -428,7 +429,7 @@ def get_pipeline(
     # Models with a test accuracy lower than the condition will not be registered with the model registry.
     cond_lte = ConditionLessThanOrEqualTo(
         left=JsonGet(
-            step_name=step_evaluate_model.name,
+            step_name=step_eval.name,
             property_file=evaluation_report,
             json_path="regression_metrics.mse.value",
         ),
