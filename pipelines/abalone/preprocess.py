@@ -63,7 +63,7 @@ if __name__ == "__main__":
     ]
     df = pd.read_csv(fn, names=columns, header=None)  
     
-    X = cal_housing_df[
+    X = df[
     [
         "longitude",
         "latitude",
