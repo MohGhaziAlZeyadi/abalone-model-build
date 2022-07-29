@@ -327,7 +327,7 @@ def get_pipeline(
     )
 
     # Use the evaluate_model_processor in a Sagemaker pipelines ProcessingStep.
-       step_eval = ProcessingStep(
+    step_eval = ProcessingStep(
         name="Evaluate-California-Housing-Model",
         processor=evaluate_model_processor,
         inputs=[
