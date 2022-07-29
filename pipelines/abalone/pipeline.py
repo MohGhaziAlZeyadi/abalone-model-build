@@ -163,10 +163,10 @@ def get_pipeline(
     #training_epochs = ParameterString(name="TrainingEpochs", default_value="100")
 
     # model performance step parameters
-    accuracy_mse_threshold = ParameterFloat(name="AccuracyMseThreshold", default_value=0.75)
+    #accuracy_mse_threshold = ParameterFloat(name="AccuracyMseThreshold", default_value=0.75)
 
     # Inference step parameters
-    endpoint_instance_type = ParameterString(name="EndpointInstanceType", default_value="ml.m5.large")
+    #endpoint_instance_type = ParameterString(name="EndpointInstanceType", default_value="ml.m5.large")
 )
     
     
@@ -432,7 +432,7 @@ def get_pipeline(
             property_file=evaluation_report,
             json_path="regression_metrics.mse.value",
         ),
-        right=accuracy_mse_threshold,
+        right=75,
     )
 
     
