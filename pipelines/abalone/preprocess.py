@@ -84,6 +84,9 @@ if __name__ == "__main__":
     Y = cal_housing_df[["medianHouseValue"]]
 
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
+    
+    raw_dir = os.path.join(os.getcwd(), "data/raw")
+    os.makedirs(raw_dir, exist_ok=True)
 
     np.save(os.path.join(raw_dir, "x_train.npy"), x_train)
     np.save(os.path.join(raw_dir, "x_test.npy"), x_test)
