@@ -171,6 +171,7 @@ def get_pipeline(
     
     
     
+    
     #input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/DEMO-xgboost-churn/data/RawData.csv",# Change this to point to the s3 location of your raw input data.
     
     input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/CaliforniaHousingPricesData/	housing.csv",# Change this to point to the s3 location of your raw input data.
