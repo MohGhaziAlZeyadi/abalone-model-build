@@ -245,7 +245,7 @@ def get_pipeline(
 
     # Use the tf2_estimator in a Sagemaker pipelines ProcessingStep.
     # NOTE how the input to the training job directly references the output of the previous step.
-    step_train_model = TrainingStep(
+    step_train = TrainingStep(
         name="TrainAbaloneModel",
         estimator=tf2_estimator,
         inputs={
