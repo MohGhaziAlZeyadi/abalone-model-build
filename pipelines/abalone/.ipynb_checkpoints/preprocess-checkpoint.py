@@ -92,9 +92,21 @@ if __name__ == "__main__":
     np.save(os.path.join(raw_dir, "x_test.npy"), x_test)
     np.save(os.path.join(raw_dir, "y_train.npy"), y_train)
     np.save(os.path.join(raw_dir, "y_test.npy"), y_test)
-#     rawdata_s3_prefix = "{}/data/raw".format(prefix)
-#     raw_s3 = sagemaker_session.upload_data(path="./data/raw/", key_prefix=rawdata_s3_prefix)
-#     print(raw_s3)
+    
+    
+    import sagemaker
+    from sagemaker import get_execution_role
+    sess = boto3.Session()
+    sm = sess.client("sagemaker")
+    role = get_execution_role()
+    sagemaker_session = sagemaker.Session(boto_session=sess)
+    bucket = sagemaker_session.default_bucket()
+    region = boto3.Session().region_name
+    prefix="Abalone"
+    
+    rawdata_s3_prefix = "{}/data/raw".format(prefix)
+    raw_s3 = sagemaker_session.upload_data(path="./data/raw/", key_prefix=rawdata_s3_prefix)
+    print(raw_s3)
     
     
     
