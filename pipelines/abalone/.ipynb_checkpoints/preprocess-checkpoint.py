@@ -23,6 +23,8 @@ import glob
 import os
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+import sagemaker
+from sagemaker import get_execution_role
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
