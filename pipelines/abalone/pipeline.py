@@ -250,13 +250,13 @@ def get_pipeline(
         estimator=tf2_estimator,
         inputs={
             "train": TrainingInput(
-                s3_data=step_preprocess_data.properties.ProcessingOutputConfig.Outputs[
+                s3_data=step_process.properties.ProcessingOutputConfig.Outputs[
                     "train"
                 ].S3Output.S3Uri,
                 content_type="text/csv",
             ),
             "test": TrainingInput(
-                s3_data=step_preprocess_data.properties.ProcessingOutputConfig.Outputs[
+                s3_data=step_process.properties.ProcessingOutputConfig.Outputs[
                     "test"
                 ].S3Output.S3Uri,
                 content_type="text/csv",
@@ -336,7 +336,7 @@ def get_pipeline(
                 destination="/opt/ml/processing/model",
             ),
             ProcessingInput(
-                source=step_preprocess_data.properties.ProcessingOutputConfig.Outputs[
+                source=step_process.properties.ProcessingOutputConfig.Outputs[
                     "test"
                 ].S3Output.S3Uri,
                 destination="/opt/ml/processing/test",
