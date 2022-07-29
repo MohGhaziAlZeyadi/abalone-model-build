@@ -80,7 +80,7 @@ if __name__ == "__main__":
     ]
     
     #df['medianHouseValue'] = df['medianHouseValue'].astype(float)
-    Y = cal_housing_df[["medianHouseValue"]] / 100000
+    Y = cal_housing_df[["medianHouseValue"]]
 
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
 
