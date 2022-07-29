@@ -230,7 +230,7 @@ def get_pipeline(
     python_version = "py37"
 
     tf2_estimator = TensorFlow(
-        source_dir="code",
+        source_dir=BASE_DIR,
         entry_point="train.py",
         instance_type="ml.m5.large",
         instance_count=1,
