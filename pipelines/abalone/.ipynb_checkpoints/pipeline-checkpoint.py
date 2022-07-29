@@ -163,15 +163,6 @@ def get_pipeline(
     input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/CaliforniaHousingPricesData/	housing.csv",# Change this to point to the s3 location of your raw input data.
     )
 
-#     # Processing step for feature engineering
-#     sklearn_processor = SKLearnProcessor(
-#         framework_version="1.0-1",
-#         instance_type=processing_instance_type,
-#         instance_count=processing_instance_count,
-#         base_job_name=f"{base_job_prefix}/sklearn-abalone-preprocess",  # choose any name
-#         sagemaker_session=sagemaker_session,
-#         role=role,
-#     )
     
     
     ##########################################
@@ -181,7 +172,6 @@ def get_pipeline(
     sklearn_processor = SKLearnProcessor(
     framework_version=framework_version,
     role=role,
-    sagemaker_session=sagemaker_session,
     instance_type=processing_instance_type,
     instance_count=processing_instance_count,
     base_job_name=f"{base_job_prefix}/sklearn-abalone-preprocess",  # choose any name,
