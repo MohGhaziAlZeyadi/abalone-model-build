@@ -61,10 +61,12 @@ if __name__ == "__main__":
     "medianHouseValue",
     "ocean_proximity"
     ]
-    df = pd.read_csv(fn, names=columns, header=None)
+    cal_housing_df = pd.read_csv(fn, names=columns, header=None)
+    
+    print(cal_housing_df.head())
     
     
-    X = df[
+    X = cal_housing_df[
      [
         "longitude",
         "latitude",
@@ -77,8 +79,8 @@ if __name__ == "__main__":
      ]
     ]
     
-    df['medianHouseValue'] = df['medianHouseValue'].astype(float)
-    Y = df[["medianHouseValue"]] / 100000
+    #df['medianHouseValue'] = df['medianHouseValue'].astype(float)
+    Y = cal_housing_df[["medianHouseValue"]] / 100000
 
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
 
