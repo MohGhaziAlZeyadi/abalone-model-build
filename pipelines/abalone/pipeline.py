@@ -47,8 +47,8 @@ os.makedirs(data_dir, exist_ok=True)
 raw_dir = os.path.join(os.getcwd(), "data/raw")
 os.makedirs(raw_dir, exist_ok=True)
 
-!aws s3 cp s3://sagemaker-sample-files/datasets/tabular/california_housing/cal_housing.tgz .
-!tar -zxf cal_housing.tgz
+# !aws s3 cp s3://sagemaker-sample-files/datasets/tabular/california_housing/cal_housing.tgz .
+# !tar -zxf cal_housing.tgz
 
 columns = [
     "longitude",
@@ -60,8 +60,9 @@ columns = [
     "households",
     "medianIncome",
     "medianHouseValue",
+    "ocean_proximity",
 ]
-cal_housing_df = pd.read_csv("CaliforniaHousing/cal_housing.data", names=columns, header=None)
+cal_housing_df = pd.read_csv("./Data/cal_housing.data", names=columns, header=None)
 
 print(cal_housing_df.head())
 
