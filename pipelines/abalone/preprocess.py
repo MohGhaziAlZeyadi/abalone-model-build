@@ -63,29 +63,6 @@ if __name__ == "__main__":
     ]
     df = pd.read_csv(fn, names=columns, header=None)    
     
-
-#     # drop the "Phone" feature column
-#     df = df.drop(["ocean_proximity"], axis=1)
-
-#     # Change the data type of "Area Code"
-#     df["Area Code"] = df["Area Code"].astype(object)
-
-#     # Drop several other columns
-#     df = df.drop(["Day Charge", "Eve Charge", "Night Charge", "Intl Charge"], axis=1)
-
-#     # Convert categorical variables into dummy/indicator variables.
-#     model_data = pd.get_dummies(df)
-
-#     # Create one binary classification target column
-#     model_data = pd.concat(
-#         [
-#             model_data["Churn?_True."],
-#             model_data.drop(["Churn?_False.", "Churn?_True."], axis=1),
-#         ],
-#         axis=1,
-#     )
-    
-    
     input_files = glob.glob("{}/*.npy".format("/opt/ml/processing/input"))
     print("\nINPUT FILE LIST: \n{}\n".format(input_files))
     scaler = StandardScaler()
@@ -116,11 +93,3 @@ if __name__ == "__main__":
                 print("SAVED TRANSFORMED TEST DATA FILE\n")
 
     
-    
-    
-#     # Split the data
-#     train_data, validation_data, test_data = np.split(model_data.sample(frac=1, random_state=1729),[int(0.7 * len(model_data)), int(0.9 * len(model_data))],)
-
-#     pd.DataFrame(train_data).to_csv(f"{base_dir}/train/train.csv", header=False, index=False)
-#     pd.DataFrame(validation_data).to_csv(f"{base_dir}/validation/validation.csv", header=False, index=False)
-#     pd.DataFrame(test_data).to_csv(f"{base_dir}/test/test.csv", header=False, index=False)
