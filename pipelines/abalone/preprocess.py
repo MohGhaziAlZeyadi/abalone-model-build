@@ -61,7 +61,33 @@ if __name__ == "__main__":
     "medianHouseValue",
     "ocean_proximity"
     ]
-    df = pd.read_csv(fn, names=columns, header=None)    
+    df = pd.read_csv(fn, names=columns, header=None)  
+    
+    X = cal_housing_df[
+    [
+        "longitude",
+        "latitude",
+        "housingMedianAge",
+        "totalRooms",
+        "totalBedrooms",
+        "population",
+        "households",
+        "medianIncome",
+    ]
+    ]
+    Y = cal_housing_df[["medianHouseValue"]] / 100000
+
+    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
+
+    np.save(os.path.join(raw_dir, "x_train.npy"), x_train)
+    np.save(os.path.join(raw_dir, "x_test.npy"), x_test)
+    np.save(os.path.join(raw_dir, "y_train.npy"), y_train)
+    np.save(os.path.join(raw_dir, "y_test.npy"), y_test)
+#     rawdata_s3_prefix = "{}/data/raw".format(prefix)
+#     raw_s3 = sagemaker_session.upload_data(path="./data/raw/", key_prefix=rawdata_s3_prefix)
+#     print(raw_s3)
+    
+    
     
     input_files = glob.glob("{}/*.npy".format("/opt/ml/processing/input"))
     print("\nINPUT FILE LIST: \n{}\n".format(input_files))
