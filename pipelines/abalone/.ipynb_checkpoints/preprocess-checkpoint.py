@@ -68,13 +68,8 @@ if __name__ == "__main__":
 #     )
 
     # Split the data
-    train_data, validation_data, test_data = np.split(
-        model_data.sample(frac=1, random_state=1729),
-        [int(0.7 * len(df)), int(0.9 * len(df))],
-    )
+    train_data, validation_data, test_data = np.split(df.sample(frac=1, random_state=1729),[int(0.7 * len(df)), int(0.9 * len(df))],)
 
     pd.DataFrame(train_data).to_csv(f"{base_dir}/train/train.csv", header=False, index=False)
-    pd.DataFrame(validation_data).to_csv(
-        f"{base_dir}/validation/validation.csv", header=False, index=False
-    )
+    pd.DataFrame(validation_data).to_csv(f"{base_dir}/validation/validation.csv", header=False, index=False)
     pd.DataFrame(test_data).to_csv(f"{base_dir}/test/test.csv", header=False, index=False)
