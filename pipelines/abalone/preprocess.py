@@ -49,24 +49,6 @@ if __name__ == "__main__":
     # drop the "Phone" feature column
     df = df.drop(["ocean_proximity"], axis=1)
 
-    # Change the data type of "Area Code"
-    #df["Area Code"] = df["Area Code"].astype(object)
-
-    # Drop several other columns
-    #df = df.drop(["Day Charge", "Eve Charge", "Night Charge", "Intl Charge"], axis=1)
-
-#     # Convert categorical variables into dummy/indicator variables.
-#     model_data = pd.get_dummies(df)
-
-#     # Create one binary classification target column
-#     model_data = pd.concat(
-#         [
-#             model_data["Churn?_True."],
-#             model_data.drop(["Churn?_False.", "Churn?_True."], axis=1),
-#         ],
-#         axis=1,
-#     )
-
     # Split the data
     train_data, validation_data, test_data = np.split(df.sample(frac=1, random_state=1729),[int(0.7 * len(df)), int(0.9 * len(df))],)
 
