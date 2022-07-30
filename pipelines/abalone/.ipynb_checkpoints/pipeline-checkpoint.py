@@ -169,9 +169,10 @@ def get_pipeline(
         name="PreprocessAbaloneData",  # choose any name
         processor=sklearn_processor,
         outputs=[
-            ProcessingOutput(output_name="train", source="/opt/ml/processing/train"),
-            ProcessingOutput(output_name="validation", source="/opt/ml/processing/validation"),
-            ProcessingOutput(output_name="test", source="/opt/ml/processing/test"),
+            ProcessingOutput(output_name="train", source="/opt/ml/input/data/train"),
+            
+            ProcessingOutput(output_name="validation", source="/opt/ml/input/data/validation"),
+            ProcessingOutput(output_name="test", source="/opt/ml/input/data/test"),
         ],
         code=os.path.join(BASE_DIR, "preprocess.py"),
         job_arguments=["--input-data", input_data],
