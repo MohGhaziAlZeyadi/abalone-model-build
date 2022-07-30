@@ -272,6 +272,7 @@ def get_pipeline(
 
     # Create SKLearnProcessor object.
     # The object contains information about what container to use, what instance type etc.
+    framework_version = "0.23-1"
     evaluate_model_processor = SKLearnProcessor(
         framework_version=framework_version,
         instance_type="ml.m5.large",
