@@ -19,13 +19,6 @@ import boto3
 import numpy as np
 import pandas as pd
 
-import glob
-import os
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-import sagemaker
-from sagemaker import get_execution_role
-
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
@@ -51,94 +44,37 @@ if __name__ == "__main__":
     logger.info("Reading downloaded data.")
 
     # read in csv
-    
-    columns = [
-    "longitude",
-    "latitude",
-    "housingMedianAge",
-    "totalRooms",
-    "totalBedrooms",
-    "population",
-    "households",
-    "medianIncome",
-    "medianHouseValue",
-    "ocean_proximity"
-    ]
-    cal_housing_df = pd.read_csv(fn, names=columns, header=None)
-    
-    print(cal_housing_df.head())
-    
-    
-    X = cal_housing_df[
-     [
-        "longitude",
-        "latitude",
-        "housingMedianAge",
-        "totalRooms",
-        "totalBedrooms",
-        "population",
-        "households",
-        "medianIncome",
-     ]
-    ]
-    
-    #df['medianHouseValue'] = df['medianHouseValue'].astype(float)
-    Y = cal_housing_df[["medianHouseValue"]]
+    df = pd.read_csv(fn)
 
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
-    
-    raw_dir = os.path.join(os.getcwd(), "data/raw")
-    os.makedirs(raw_dir, exist_ok=True)
+    # drop the "Phone" feature column
+    df = df.drop(["Phone"], axis=1)
 
-    np.save(os.path.join(raw_dir, "x_train.npy"), x_train)
-    np.save(os.path.join(raw_dir, "x_test.npy"), x_test)
-    np.save(os.path.join(raw_dir, "y_train.npy"), y_train)
-    np.save(os.path.join(raw_dir, "y_test.npy"), y_test)
-    
-    
-    import sagemaker
-    from sagemaker import get_execution_role
-    sess = boto3.Session()
-    sm = sess.client("sagemaker")
-    role = get_execution_role()
-    sagemaker_session = sagemaker.Session(boto_session=sess)
-    bucket = sagemaker_session.default_bucket()
-    region = boto3.Session().region_name
-    prefix="Abalone"
-    
-    rawdata_s3_prefix = "{}/data/raw".format(prefix)
-    raw_s3 = sagemaker_session.upload_data(path="./data/raw/", key_prefix=rawdata_s3_prefix)
-    print(raw_s3)
-    
-    
-    
-    input_files = glob.glob("{}/*.npy".format("/opt/ml/processing/input"))
-    print("\nINPUT FILE LIST: \n{}\n".format(input_files))
-    scaler = StandardScaler()
-    x_train = np.load(os.path.join("/opt/ml/processing/input", "x_train.npy"))
-    scaler.fit(x_train)
-    for file in input_files:
-        raw = np.load(file)
-        # only transform feature columns
-        if "y_" not in file:
-            transformed = scaler.transform(raw)
-        if "train" in file:
-            if "y_" in file:
-                output_path = os.path.join("/opt/ml/processing/train", "y_train.npy")
-                np.save(output_path, raw)
-                print("SAVED LABEL TRAINING DATA FILE\n")
-            else:
-                output_path = os.path.join("/opt/ml/processing/train", "x_train.npy")
-                np.save(output_path, transformed)
-                print("SAVED TRANSFORMED TRAINING DATA FILE\n")
-        else:
-            if "y_" in file:
-                output_path = os.path.join("/opt/ml/processing/test", "y_test.npy")
-                np.save(output_path, raw)
-                print("SAVED LABEL TEST DATA FILE\n")
-            else:
-                output_path = os.path.join("/opt/ml/processing/test", "x_test.npy")
-                np.save(output_path, transformed)
-                print("SAVED TRANSFORMED TEST DATA FILE\n")
+    # Change the data type of "Area Code"
+    df["Area Code"] = df["Area Code"].astype(object)
 
-    
+    # Drop several other columns
+    df = df.drop(["Day Charge", "Eve Charge", "Night Charge", "Intl Charge"], axis=1)
+
+    # Convert categorical variables into dummy/indicator variables.
+    model_data = pd.get_dummies(df)
+
+    # Create one binary classification target column
+    model_data = pd.concat(
+        [
+            model_data["Churn?_True."],
+            model_data.drop(["Churn?_False.", "Churn?_True."], axis=1),
+        ],
+        axis=1,
+    )
+
+    # Split the data
+    train_data, validation_data, test_data = np.split(
+        model_data.sample(frac=1, random_state=1729),
+        [int(0.7 * len(model_data)), int(0.9 * len(model_data))],
+    )
+
+    pd.DataFrame(train_data).to_csv(f"{base_dir}/train/train.csv", header=False, index=False)
+    pd.DataFrame(validation_data).to_csv(
+        f"{base_dir}/validation/validation.csv", header=False, index=False
+    )
+    pd.DataFrame(test_data).to_csv(f"{base_dir}/test/test.csv", header=False, index=False)

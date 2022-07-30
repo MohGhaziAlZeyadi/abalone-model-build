@@ -9,46 +9,65 @@
 # or in the "license" file accompanying this file. This file is
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
+# language governing permissions and limitations under the License.
+"""Evaluation script for measuring model accuracy."""
 
-
-import os
 import json
-import subprocess
-import sys
-import numpy as np
-import pathlib
+import logging
+import os
+import pickle
 import tarfile
 
+import pandas as pd
+import xgboost
 
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler())
 
+# May need to import additional metrics depending on what you are measuring.
+# See https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
+from sklearn.metrics import accuracy_score, classification_report, roc_auc_score
 
 if __name__ == "__main__":
+    model_path = "/opt/ml/processing/model/model.tar.gz"
+    with tarfile.open(model_path) as tar:
+        tar.extractall(path="..")
 
-    install("tensorflow==2.4.1")
-    model_path = f"/opt/ml/processing/model/model.tar.gz"
-    with tarfile.open(model_path, "r:gz") as tar:
-        tar.extractall("./model")
-    import tensorflow as tf
+    logger.debug("Loading xgboost model.")
+    model = pickle.load(open("xgboost-model", "rb"))
 
-    model = tf.keras.models.load_model("./model/1")
-    test_path = "/opt/ml/processing/test/"
-    x_test = np.load(os.path.join(test_path, "x_test.npy"))
-    y_test = np.load(os.path.join(test_path, "y_test.npy"))
-    scores = model.evaluate(x_test, y_test, verbose=2)
-    print("\nTest MSE :", scores)
+    print("Loading test input data")
+    test_path = "/opt/ml/processing/test/test.csv"
+    df = pd.read_csv(test_path, header=None)
 
-    # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
+    logger.debug("Reading test data.")
+    y_test = df.iloc[:, 0].to_numpy()
+    df.drop(df.columns[0], axis=1, inplace=True)
+    X_test = xgboost.DMatrix(df.values)
+
+    logger.info("Performing predictions against test data.")
+    predictions = model.predict(X_test)
+
+    print("Creating classification evaluation report")
+    acc = accuracy_score(y_test, predictions.round())
+    auc = roc_auc_score(y_test, predictions.round())
+
+    # The metrics reported can change based on the model used, but it must be a specific name per (https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html)
     report_dict = {
-        "regression_metrics": {
-            "mse": {"value": scores, "standard_deviation": "NaN"},
+        "binary_classification_metrics": {
+            "accuracy": {
+                "value": acc,
+                "standard_deviation": "NaN",
+            },
+            "auc": {"value": auc, "standard_deviation": "NaN"},
         },
     }
 
-    output_dir = "/opt/ml/processing/evaluation"
-    pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
+    print("Classification report:\n{}".format(report_dict))
 
-    evaluation_path = f"{output_dir}/evaluation.json"
-    with open(evaluation_path, "w") as f:
+    evaluation_output_path = os.path.join("/opt/ml/processing/evaluation", "evaluation.json")
+    print("Saving classification report to {}".format(evaluation_output_path))
+
+    with open(evaluation_output_path, "w") as f:
         f.write(json.dumps(report_dict))
