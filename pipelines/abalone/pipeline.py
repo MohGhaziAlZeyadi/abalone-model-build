@@ -191,39 +191,6 @@ def get_pipeline(
         instance_type="ml.m5.xlarge",
     )
     
-    
-#     xgb_train = Estimator(
-#         image_uri=image_uri,
-#         instance_type=training_instance_type,
-#         instance_count=1,
-#         output_path=model_path,
-#         base_job_name=f"{base_job_prefix}/abalone-train",
-#         sagemaker_session=sagemaker_session,
-#         role=role,
-#     )
-#     xgb_train.set_hyperparameters(
-#         objective="binary:logistic",
-#         num_round=50,
-#         max_depth=5,
-#         eta=0.2,
-#         gamma=4,
-#         min_child_weight=6,
-#         subsample=0.7,
-#         silent=0,
-#     )
-#     step_train = TrainingStep(
-#         name="TrainAbaloneModel",
-#         estimator=xgb_train,
-#         inputs={
-#             "train":
-#             TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["train"].S3Output.S3Uri,content_type="text/csv",),
-            
-#             "validation":
-#             TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["validation"].S3Output.S3Uri,content_type="text/csv",),
-#         },
-#     )
-
-
 
     from sagemaker.tensorflow import TensorFlow
     from sagemaker.workflow.steps import TrainingStep
@@ -311,41 +278,6 @@ def get_pipeline(
         code=os.path.join(BASE_DIR, "evaluate.py"),
         property_files=[evaluation_report],
     )
-#     script_eval = ScriptProcessor(
-#         image_uri=image_uri,
-#         command=["python3"],
-#         instance_type="ml.m5.xlarge",
-#         instance_count=1,
-#         base_job_name=f"{base_job_prefix}/script-abalone-eval",
-#         sagemaker_session=sagemaker_session,
-#         role=role,
-#     )
-#     evaluation_report = PropertyFile(
-#         name="EvaluationReport",
-#         output_name="evaluation",
-#         path="evaluation.json",
-#     )
-#     step_eval = ProcessingStep(
-#         name="CustomerChurnEval",
-#         processor=script_eval,
-#         inputs=[
-#             ProcessingInput(
-#                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
-#                 destination="/opt/ml/processing/model",
-#             ),
-#             ProcessingInput(
-#                 source=step_process.properties.ProcessingOutputConfig.Outputs[
-#                     "test"
-#                 ].S3Output.S3Uri,
-#                 destination="/opt/ml/processing/test",
-#             ),
-#         ],
-#         outputs=[
-#             ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation"),
-#         ],
-#         code=os.path.join(BASE_DIR, "evaluate.py"),
-#         property_files=[evaluation_report],
-#     )
     
     
     #########################################################
