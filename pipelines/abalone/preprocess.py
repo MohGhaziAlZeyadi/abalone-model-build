@@ -44,21 +44,22 @@ if __name__ == "__main__":
     logger.info("Reading downloaded data.")
     
     
-#     columns = [
-#     "longitude",
-#     "latitude",
-#     "housingMedianAge",
-#     "totalRooms",
-#     "totalBedrooms",
-#     "population",
-#     "households",
-#     "medianIncome",
-#     "medianHouseValue",
-#     ]
+    columns = [
+    "longitude",
+    "latitude",
+    "housingMedianAge",
+    "totalRooms",
+    "totalBedrooms",
+    "population",
+    "households",
+    "medianIncome",
+    "medianHouseValue",
+    "ocean_proximity"
+    ]
+    
 
     # read in csv
-    #df = pd.read_csv(fn)
-    df = pd.read_csv(fn)
+    df = pd.read_csv(fn, names=columns, header=None)
 
     # drop the "Phone" feature column
     df = df.drop(["ocean_proximity"], axis=1)
