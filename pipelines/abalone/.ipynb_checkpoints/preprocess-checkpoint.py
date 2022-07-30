@@ -63,7 +63,7 @@ if __name__ == "__main__":
     # drop the "Phone" feature column
     df = df.drop(["ocean_proximity"], axis=1)
     
-    X = cal_housing_df[
+    X = df[
     [
         "longitude",
         "latitude",
