@@ -308,7 +308,7 @@ def get_pipeline(
         outputs=[
             ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation"),
         ],
-        code="evaluate.py",
+        code=os.path.join(BASE_DIR, "evaluate.py"),
         property_files=[evaluation_report],
     )
 #     script_eval = ScriptProcessor(
