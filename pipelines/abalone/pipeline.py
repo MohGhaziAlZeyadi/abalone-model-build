@@ -364,7 +364,7 @@ def get_pipeline(
     # Register model step that will be conditionally executed
     step_register = RegisterModel(
         name="CustomerChurnRegisterModel",
-        estimator=xgb_train,
+        estimator=tf2_estimator,
         model_data=step_train.properties.ModelArtifacts.S3ModelArtifacts,
         content_types=["text/csv"],
         response_types=["text/csv"],
@@ -374,6 +374,7 @@ def get_pipeline(
         approval_status=model_approval_status,
         model_metrics=model_metrics,
     )
+    
 
     # Condition step for evaluating model quality and branching execution
     cond_lte = ConditionGreaterThanOrEqualTo(  # You can change the condition here
