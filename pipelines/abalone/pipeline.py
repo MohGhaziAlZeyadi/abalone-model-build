@@ -39,6 +39,7 @@ from sagemaker.workflow.step_collections import RegisterModel
 from sagemaker.workflow.steps import ProcessingStep, TrainingStep
 
 from sagemaker.workflow.pipeline_context import PipelineSession
+############################################################################################
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -150,10 +151,12 @@ def get_pipeline(
     training_instance_type = ParameterString(name="TrainingInstanceType", default_value="ml.m5.xlarge")
     model_approval_status = ParameterString(name="ModelApprovalStatus",default_value="PendingManualApproval",  # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
 )
-    input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/DEMO-xgboost-churn/data/RawData.csv",# Change this to point to the s3 location of your raw input data.
+    input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/CaliforniaHousingPricesData/data/housing.csv",# Change this to point to the s3 location of your raw input data.
     )
-
+    
+    #########################################
     # Processing step for feature engineering
+    #########################################
     sklearn_processor = SKLearnProcessor(
         framework_version="1.0-1",
         instance_type=processing_instance_type,
@@ -174,8 +177,9 @@ def get_pipeline(
         job_arguments=["--input-data", input_data],
     )
 
-    
+    ##############################################
     # Training step for generating model artifacts
+    ##############################################
     model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
         
