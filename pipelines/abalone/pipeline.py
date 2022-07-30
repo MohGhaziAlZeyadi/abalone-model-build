@@ -295,11 +295,11 @@ def get_pipeline(
         processor=evaluate_model_processor,
         inputs=[
             ProcessingInput(
-                source=step_train_model.properties.ModelArtifacts.S3ModelArtifacts,
+                source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
                 destination="/opt/ml/processing/model",
             ),
             ProcessingInput(
-                source=step_preprocess_data.properties.ProcessingOutputConfig.Outputs[
+                source=step_process.properties.ProcessingOutputConfig.Outputs[
                     "test"
                 ].S3Output.S3Uri,
                 destination="/opt/ml/processing/test",
