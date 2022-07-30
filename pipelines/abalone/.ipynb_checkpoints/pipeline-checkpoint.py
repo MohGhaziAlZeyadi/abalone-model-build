@@ -253,7 +253,7 @@ def get_pipeline(
     #NOTE how the input to the training job directly references the output of the previous step.
     step_train = TrainingStep(
     name="TrainAbaloneModel",
-    estimator=xgb_train,
+    estimator=tf2_estimator,
     inputs={
         "train":
         TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["train"].S3Output.S3Uri,content_type="text/csv",),
