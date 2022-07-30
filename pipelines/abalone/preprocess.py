@@ -47,7 +47,7 @@ if __name__ == "__main__":
     df = pd.read_csv(fn)
 
     # drop the "Phone" feature column
-    df = df.drop(["Phone"], axis=1)
+    df = df.drop(["ocean_proximity"], axis=1)
 
     # Change the data type of "Area Code"
     #df["Area Code"] = df["Area Code"].astype(object)

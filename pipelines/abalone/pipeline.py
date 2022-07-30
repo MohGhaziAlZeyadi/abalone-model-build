@@ -222,8 +222,11 @@ def get_pipeline(
             TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["validation"].S3Output.S3Uri,content_type="text/csv",),
         },
     )
-
+    
+    
+    #####################################
     # Processing step for evaluation
+    #####################################
     script_eval = ScriptProcessor(
         image_uri=image_uri,
         command=["python3"],
