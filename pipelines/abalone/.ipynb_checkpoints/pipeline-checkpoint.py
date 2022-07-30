@@ -180,50 +180,93 @@ def get_pipeline(
     ##############################################
     # Training step for generating model artifacts
     ##############################################
-    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
+#     model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
         
-    image_uri = sagemaker.image_uris.retrieve(
-        framework="xgboost",  # we are using the Sagemaker built in xgboost algorithm
-        region=region,
-        version="1.0-1",
-        py_version="py3",
-        instance_type="ml.m5.xlarge",
-    )
+#     image_uri = sagemaker.image_uris.retrieve(
+#         framework="xgboost",  # we are using the Sagemaker built in xgboost algorithm
+#         region=region,
+#         version="1.0-1",
+#         py_version="py3",
+#         instance_type="ml.m5.xlarge",
+#     )
     
     
-    xgb_train = Estimator(
-        image_uri=image_uri,
-        instance_type=training_instance_type,
-        instance_count=1,
-        output_path=model_path,
-        base_job_name=f"{base_job_prefix}/abalone-train",
-        sagemaker_session=sagemaker_session,
-        role=role,
-    )
-    xgb_train.set_hyperparameters(
-        objective="binary:logistic",
-        num_round=50,
-        max_depth=5,
-        eta=0.2,
-        gamma=4,
-        min_child_weight=6,
-        subsample=0.7,
-        silent=0,
-    )
-    step_train = TrainingStep(
-        name="TrainAbaloneModel",
-        estimator=xgb_train,
-        inputs={
-            "train":
-            TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["train"].S3Output.S3Uri,content_type="text/csv",),
+#     xgb_train = Estimator(
+#         image_uri=image_uri,
+#         instance_type=training_instance_type,
+#         instance_count=1,
+#         output_path=model_path,
+#         base_job_name=f"{base_job_prefix}/abalone-train",
+#         sagemaker_session=sagemaker_session,
+#         role=role,
+#     )
+#     xgb_train.set_hyperparameters(
+#         objective="binary:logistic",
+#         num_round=50,
+#         max_depth=5,
+#         eta=0.2,
+#         gamma=4,
+#         min_child_weight=6,
+#         subsample=0.7,
+#         silent=0,
+#     )
+#     step_train = TrainingStep(
+#         name="TrainAbaloneModel",
+#         estimator=xgb_train,
+#         inputs={
+#             "train":
+#             TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["train"].S3Output.S3Uri,content_type="text/csv",),
             
-            "validation":
-            TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["validation"].S3Output.S3Uri,content_type="text/csv",),
+#             "validation":
+#             TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["validation"].S3Output.S3Uri,content_type="text/csv",),
+#         },
+#     )
+
+
+    from sagemaker.tensorflow import TensorFlow
+    from sagemaker.workflow.steps import TrainingStep
+    import time
+
+    # Where to store the trained model
+    #model_path = f"s3://{bucket}/{prefix}/model/"
+    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
+
+    hyperparameters = {"epochs": 10}
+    tensorflow_version = "2.4.1"
+    python_version = "py37"
+
+    tf2_estimator = TensorFlow(
+        source_dir=BASE_DIR,
+        entry_point="train.py",
+        instance_type="ml.m5.large",
+        instance_count=1,
+        framework_version=tensorflow_version,
+        role=role,
+        base_job_name=f"{base_job_prefix}/abalone-train",
+        output_path=model_path,
+        hyperparameters=hyperparameters,
+        py_version=python_version,
+    )
+
+    #Use the tf2_estimator in a Sagemaker pipelines ProcessingStep.
+    #NOTE how the input to the training job directly references the output of the previous step.
+    step_train = TrainingStep(
+    name="TrainAbaloneModel",
+    estimator=xgb_train,
+    inputs={
+        "train":
+        TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["train"].S3Output.S3Uri,content_type="text/csv",),
+            
+        "validation":
+        TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["validation"].S3Output.S3Uri,content_type="text/csv",),
         },
     )
 
+    
+    #####################################
     # Processing step for evaluation
+    #####################################
     script_eval = ScriptProcessor(
         image_uri=image_uri,
         command=["python3"],
