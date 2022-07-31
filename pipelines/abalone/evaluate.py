@@ -8,13 +8,13 @@ import pathlib
 import tarfile
 
 
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+# def install(package):
+#     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 
 if __name__ == "__main__":
 
-    install("tensorflow==2.4.1")
+    #install("tensorflow==2.4.1")
     model_path = f"/opt/ml/processing/model/model.tar.gz"
     with tarfile.open(model_path, "r:gz") as tar:
         tar.extractall("./model")
