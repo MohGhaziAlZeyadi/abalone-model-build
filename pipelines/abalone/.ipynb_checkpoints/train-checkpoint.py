@@ -61,8 +61,8 @@ if __name__ == "__main__":
     print('Test data location: {}'.format(args.test))
     x_train, y_train = get_train_data(args.train)
     
-    x_train = np.asarray(x_train).astype(np.float32)
-    y_train = np.asarray(y_train).astype(np.float32)
+#     x_train = np.asarray(x_train).astype(np.float32)
+#     y_train = np.asarray(y_train).astype(np.float32)
     
     x_test, y_test = get_test_data(args.test)
 
