@@ -24,8 +24,8 @@ def parse_args():
 
 def get_train_data(train_dir):
 
-    x_train = np.load(os.path.join(train_dir, 'x_train.npy'))
-    y_train = np.load(os.path.join(train_dir, 'y_train.npy'))
+    x_train = np.load(os.path.join(train_dir, 'x_train.npy'), allow_pickle=True)
+    y_train = np.load(os.path.join(train_dir, 'y_train.npy'), allow_pickle=True)
     print('x train', x_train.shape,'y train', y_train.shape)
 
     return x_train, y_train
@@ -33,8 +33,8 @@ def get_train_data(train_dir):
 
 def get_test_data(test_dir):
 
-    x_test = np.load(os.path.join(test_dir, 'x_test.npy'))
-    y_test = np.load(os.path.join(test_dir, 'y_test.npy'))
+    x_test = np.load(os.path.join(test_dir, 'x_test.npy'), allow_pickle=True)
+    y_test = np.load(os.path.join(test_dir, 'y_test.npy'), allow_pickle=True)
     print('x test', x_test.shape,'y test', y_test.shape)
 
     return x_test, y_test
