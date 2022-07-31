@@ -67,7 +67,9 @@ if __name__ == "__main__":
     df = df.drop(["ocean_proximity"], axis=1)
     
     #Convert all df into float
-    df = df.astype(float)
+    cols = df.columns
+    for col in cols:
+        df[col] = df[col].astype(float)
     
     X = df[
     [
