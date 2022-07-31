@@ -67,7 +67,6 @@ if __name__ == "__main__":
     df = df.drop(["ocean_proximity"], axis=1)
     
     #Convert all df into float
-    df["longitude"] = df["longitude"].astype(float)
     df["latitude"] = df["latitude"].astype(float)
     df["housingMedianAge"] = df["housingMedianAge"].astype(float)
     df["totalRooms"] = df["totalRooms"].astype(float)
@@ -77,6 +76,7 @@ if __name__ == "__main__":
     df["medianIncome"] = df["medianIncome"].astype(float)
     df["medianHouseValue"] = df["medianHouseValue"].astype(float)
     df["ocean_proximity"] = df["ocean_proximity"].astype(float)
+    df["longitude"] = df["longitude"].astype(float)
     
     X = df[
     [
