@@ -56,6 +56,10 @@ if __name__ == "__main__":
     print('Training data location: {}'.format(args.train))
     print('Test data location: {}'.format(args.test))
     x_train, y_train = get_train_data(args.train)
+    
+    x_train = np.asarray(x_train).astype(np.float32)
+    y_train = np.asarray(y_train).astype(np.float32)
+    
     x_test, y_test = get_test_data(args.test)
 
     batch_size = args.batch_size
@@ -67,11 +71,7 @@ if __name__ == "__main__":
     model = get_model()
     optimizer = tf.keras.optimizers.SGD(learning_rate)
     model.compile(optimizer=optimizer, loss='mse')
-    model.fit(x_train,
-              y_train,
-              batch_size=batch_size,
-              epochs=epochs,
-              validation_data=(x_test, y_test))
+    model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test))
 
     # evaluate on test set
     scores = model.evaluate(x_test, y_test, batch_size, verbose=2)
