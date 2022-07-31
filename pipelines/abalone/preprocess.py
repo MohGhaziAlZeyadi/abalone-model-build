@@ -83,8 +83,8 @@ if __name__ == "__main__":
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
     
     np.save(os.path.join(f"{base_dir}/train/", "x_train.npy"), x_train)
-    np.save(os.path.join(f"{base_dir}/test/", "x_test.npy"), x_test)
     np.save(os.path.join(f"{base_dir}/train/", "y_train.npy"), y_train)
+    np.save(os.path.join(f"{base_dir}/test/", "x_test.npy"), x_test)
     np.save(os.path.join(f"{base_dir}/test/", "y_test.npy"), y_test)
 #     rawdata_s3_prefix = "{}/data/raw".format(prefix)
 #     raw_s3 = sagemaker_session.upload_data(path="./data/raw/", key_prefix=rawdata_s3_prefix)
