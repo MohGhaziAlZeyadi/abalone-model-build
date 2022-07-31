@@ -66,17 +66,20 @@ if __name__ == "__main__":
     # drop the "Phone" feature column
     df = df.drop(["ocean_proximity"], axis=1)
     
-    #Convert all df into float
-    df["latitude"] = df["latitude"].astype(float)
-    df["housingMedianAge"] = df["housingMedianAge"].astype(float)
-    df["totalRooms"] = df["totalRooms"].astype(float)
-    df["totalBedrooms"] = df["totalBedrooms"].astype(float)
-    df["population"] = df["population"].astype(float)
-    df["households"] = df["households"].astype(float)
-    df["medianIncome"] = df["medianIncome"].astype(float)
-    df["medianHouseValue"] = df["medianHouseValue"].astype(float)
-    df["ocean_proximity"] = df["ocean_proximity"].astype(float)
-    df["longitude"] = df["longitude"].astype(float)
+    print(df.head(10))
+    print (df.dtypes)
+    
+#     #Convert all df into float
+#     df["latitude"] = df["latitude"].astype(float)
+#     df["housingMedianAge"] = df["housingMedianAge"].astype(float)
+#     df["totalRooms"] = df["totalRooms"].astype(float)
+#     df["totalBedrooms"] = df["totalBedrooms"].astype(float)
+#     df["population"] = df["population"].astype(float)
+#     df["households"] = df["households"].astype(float)
+#     df["medianIncome"] = df["medianIncome"].astype(float)
+#     df["medianHouseValue"] = df["medianHouseValue"].astype(float)
+#     df["ocean_proximity"] = df["ocean_proximity"].astype(float)
+#     df["longitude"] = df["longitude"].astype(float)
     
     X = df[
     [
