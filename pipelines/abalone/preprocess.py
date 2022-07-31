@@ -101,21 +101,4 @@ if __name__ == "__main__":
     np.save(os.path.join(f"{base_dir}/train/", "y_train.npy"), y_train)
     np.save(os.path.join(f"{base_dir}/test/", "x_test.npy"), x_test)
     np.save(os.path.join(f"{base_dir}/test/", "y_test.npy"), y_test)
-#     rawdata_s3_prefix = "{}/data/raw".format(prefix)
-#     raw_s3 = sagemaker_session.upload_data(path="./data/raw/", key_prefix=rawdata_s3_prefix)
-#     print(raw_s3)
-    
-    
-    
-    
 
-    # Split the data
-#     train_data, validation_data, test_data = np.split(df.sample(frac=1, random_state=1729),[int(0.7 * len(df)), int(0.9 * len(df))],)
-
-#     pd.DataFrame(train_data).to_csv(f"{base_dir}/train/train.csv", header=False, index=False)
-#     pd.DataFrame(validation_data).to_csv(f"{base_dir}/validation/validation.csv", header=False, index=False)
-#     pd.DataFrame(test_data).to_csv(f"{base_dir}/test/test.csv", header=False, index=False)
-
-    
-    
-    

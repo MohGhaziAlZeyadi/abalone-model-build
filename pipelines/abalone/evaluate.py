@@ -24,6 +24,8 @@ if __name__ == "__main__":
     test_path = "/opt/ml/processing/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))
     y_test = np.load(os.path.join(test_path, "y_test.npy"))
+    print('x test', x_test.shape,'y test', y_test.shape)
+    
     scores = model.evaluate(x_test, y_test, verbose=2)
     print("\nTest MSE :", scores)
 
@@ -40,3 +42,6 @@ if __name__ == "__main__":
     evaluation_path = f"{output_dir}/evaluation.json"
     with open(evaluation_path, "w") as f:
         f.write(json.dumps(report_dict))
+
+        
+        
