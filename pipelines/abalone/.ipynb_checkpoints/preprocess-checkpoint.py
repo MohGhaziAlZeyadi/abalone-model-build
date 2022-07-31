@@ -93,7 +93,7 @@ if __name__ == "__main__":
         "medianIncome",
     ]
     ]
-    Y = df[["medianHouseValue"]]
+    Y = df[["medianHouseValue"]]/100000
 
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
     
