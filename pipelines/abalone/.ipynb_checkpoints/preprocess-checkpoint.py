@@ -66,6 +66,9 @@ if __name__ == "__main__":
     # drop the "Phone" feature column
     df = df.drop(["ocean_proximity"], axis=1)
     
+    #Convert all df into float
+    df = df.astype(float)
+    
     X = df[
     [
         "longitude",
