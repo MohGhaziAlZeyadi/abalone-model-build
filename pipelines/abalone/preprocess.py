@@ -25,13 +25,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
-def standardize(train, test):
-        mean = np.mean(train, axis=0)
-        std = np.std(train, axis=0)+0.000001
 
-        X_train = (train - mean) / std
-        X_test = (test - mean) /std
-    return X_train, X_test
 
 if __name__ == "__main__":
     logger.info("Starting preprocessing.")
@@ -93,7 +87,11 @@ if __name__ == "__main__":
 
     x_train_without_standardized, x_test_without_standardized, y_train, y_test = train_test_split(X, Y, test_size=0.33)
     
-    
+    mean = np.mean(x_train_without_standardized, axis=0)
+    std = np.std(x_train_without_standardized, axis=0)+0.000001
+
+    X_train = (x_train_without_standardized - mean) / std
+    X_test = (x_test_without_standardized - mean) /std
     
     
     x_train, x_test = standardize(x_train_without_standardized, x_test_without_standardized)
