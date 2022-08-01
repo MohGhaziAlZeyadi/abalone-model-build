@@ -90,8 +90,8 @@ if __name__ == "__main__":
     mean = np.mean(x_train_without_standardized, axis=0)
     std = np.std(x_train_without_standardized, axis=0)+0.000001
 
-    X_train = (x_train_without_standardized - mean) / std
-    X_test = (x_test_without_standardized - mean) /std
+    x_train = (x_train_without_standardized - mean) / std
+    x_test = (x_test_without_standardized - mean) /std
     
     
     
