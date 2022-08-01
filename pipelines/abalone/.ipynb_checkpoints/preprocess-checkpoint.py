@@ -91,12 +91,12 @@ if __name__ == "__main__":
     ]
     Y = df[["medianHouseValue"]]/100000
 
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
+    x_train_without_standardized, x_test_without_standardized, y_train, y_test = train_test_split(X, Y, test_size=0.33)
     
     
     
     
-    x_train, x_test = standardize(x_train, x_test)
+    x_train, x_test = standardize(x_train_without_standardized, x_test_without_standardized)
     
     np.save(os.path.join(f"{base_dir}/train/", "x_train.npy"), x_train)
     np.save(os.path.join(f"{base_dir}/train/", "y_train.npy"), y_train)
