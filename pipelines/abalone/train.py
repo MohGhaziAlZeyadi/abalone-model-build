@@ -2,7 +2,8 @@ import argparse
 import numpy as np
 import os
 import tensorflow as tf
-
+print(tf. __version__) 
+print("************************************************************")
 def parse_args():
 
     parser = argparse.ArgumentParser()
@@ -42,17 +43,6 @@ def get_test_data(test_dir):
     print(type(y_test))
 
     return x_test, y_test
-
-
-
-# def my_model():
-#     model = Sequential()
-#     model.add(Dense(100,activation='relu',input_shape=(n_cols,)))
-#     model.add(Dense(50,activation='relu'))
-#     model.add(Dense(1))
-#    model.compile(loss='mean_squared_error',optimizer='adam')
-#    return model
-
 
 
 
