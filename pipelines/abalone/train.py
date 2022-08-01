@@ -50,7 +50,7 @@ def get_test_data(test_dir):
 #     model.add(Dense(100,activation='relu',input_shape=(n_cols,)))
 #     model.add(Dense(50,activation='relu'))
 #     model.add(Dense(1))
-    model.compile(loss='mean_squared_error',optimizer='adam')
+#    model.compile(loss='mean_squared_error',optimizer='adam')
 #    return model
 
 

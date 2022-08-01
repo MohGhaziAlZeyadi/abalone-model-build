@@ -22,8 +22,8 @@ if __name__ == "__main__":
     import tensorflow as tf
 
     model = tf.keras.models.load_model("./model/1")
-#     optimizer = tf.keras.optimizers.SGD(0.1)
-#     model.compile(optimizer=optimizer, loss='mse')
+    
+    model.compile(loss='mean_squared_error',optimizer='adam')
     
     test_path = "/opt/ml/processing/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     print('x test', x_test.shape,'y test', y_test.shape)
     
     scores = model.evaluate(x_test, y_test, verbose=2)
-    print("\nTest MSE :", scores)
+    print("\nThe Test MSE is :", scores)
 
     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
     report_dict = {
