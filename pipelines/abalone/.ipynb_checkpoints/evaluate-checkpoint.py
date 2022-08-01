@@ -8,21 +8,21 @@ import pathlib
 import tarfile
 
 
-# def install(package):
-#     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 
 if __name__ == "__main__":
 
-    #install("tensorflow==2.4.1")
+    install("tensorflow==2.4.1")
     model_path = f"/opt/ml/processing/model/model.tar.gz"
     with tarfile.open(model_path, "r:gz") as tar:
         tar.extractall("./model")
     import tensorflow as tf
 
     model = tf.keras.models.load_model("./model/1")
-    optimizer = tf.keras.optimizers.SGD(0.1)
-    model.compile(optimizer=optimizer, loss='mse')
+#     optimizer = tf.keras.optimizers.SGD(0.1)
+#     model.compile(optimizer=optimizer, loss='mse')
     
     test_path = "/opt/ml/processing/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))

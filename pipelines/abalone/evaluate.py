@@ -21,8 +21,8 @@ if __name__ == "__main__":
     import tensorflow as tf
 
     model = tf.keras.models.load_model("./model/1")
-    optimizer = tf.keras.optimizers.SGD(0.1)
-    model.compile(optimizer=optimizer, loss='mse')
+#     optimizer = tf.keras.optimizers.SGD(0.1)
+#     model.compile(optimizer=optimizer, loss='mse')
     
     test_path = "/opt/ml/processing/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))
