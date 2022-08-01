@@ -94,7 +94,6 @@ if __name__ == "__main__":
     X_test = (x_test_without_standardized - mean) /std
     
     
-    x_train, x_test = standardize(x_train_without_standardized, x_test_without_standardized)
     
     np.save(os.path.join(f"{base_dir}/train/", "x_train.npy"), x_train)
     np.save(os.path.join(f"{base_dir}/train/", "y_train.npy"), y_train)
