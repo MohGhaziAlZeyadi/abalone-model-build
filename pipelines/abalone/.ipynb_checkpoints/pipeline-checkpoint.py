@@ -262,7 +262,7 @@ def get_pipeline(
 
     # Use the evaluate_model_processor in a Sagemaker pipelines ProcessingStep.
     step_eval = ProcessingStep(
-        name="CustomerChurnEval",
+        name= "EvaluateAbaloneModel",
         processor=evaluate_model_processor,
         inputs=[
             ProcessingInput(
