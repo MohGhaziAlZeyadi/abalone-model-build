@@ -84,14 +84,16 @@ if __name__ == "__main__":
     ]
     ]
     Y = df[["medianHouseValue"]]/100000
-
-    x_train_without_standardized, x_test_without_standardized, y_train, y_test = train_test_split(X, Y, test_size=0.33)
     
-    mean = np.mean(x_train_without_standardized, axis=0)
-    std = np.std(x_train_without_standardized, axis=0)+0.000001
+    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
 
-    x_train = (x_train_without_standardized - mean) / std
-    x_test = (x_test_without_standardized - mean) /std
+#     x_train_without_standardized, x_test_without_standardized, y_train, y_test = train_test_split(X, Y, test_size=0.33)
+    
+#     mean = np.mean(x_train_without_standardized, axis=0)
+#     std = np.std(x_train_without_standardized, axis=0)+0.000001
+
+#     x_train = (x_train_without_standardized - mean) / std
+#     x_test = (x_test_without_standardized - mean) /std
     
     
     
