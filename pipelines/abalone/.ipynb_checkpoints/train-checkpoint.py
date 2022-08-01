@@ -44,11 +44,23 @@ def get_test_data(test_dir):
     return x_test, y_test
 
 
+
+# def my_model():
+#     model = Sequential()
+#     model.add(Dense(100,activation='relu',input_shape=(n_cols,)))
+#     model.add(Dense(50,activation='relu'))
+#     model.add(Dense(1))
+    model.compile(loss='mean_squared_error',optimizer='adam')
+#    return model
+
+
+
+
 def get_model():
 
     inputs = tf.keras.Input(shape=(8,))
-    hidden_1 = tf.keras.layers.Dense(8, activation='tanh')(inputs)
-    hidden_2 = tf.keras.layers.Dense(4, activation='sigmoid')(hidden_1)
+    hidden_1 = tf.keras.layers.Dense(8, activation='relu')(inputs)
+    hidden_2 = tf.keras.layers.Dense(4, activation='relu')(hidden_1)
     outputs = tf.keras.layers.Dense(1)(hidden_2)
     return tf.keras.Model(inputs=inputs, outputs=outputs)
 
@@ -70,8 +82,9 @@ if __name__ == "__main__":
 
 
     model = get_model()
-    optimizer = tf.keras.optimizers.SGD(learning_rate)
-    model.compile(optimizer=optimizer, loss='mse')
+    #optimizer = tf.keras.optimizers.SGD(learning_rate)
+    model.compile(loss='mean_squared_error',optimizer='adam')
+    #model.compile(optimizer=optimizer, loss='mse')
     model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test))
 
     # evaluate on test set
