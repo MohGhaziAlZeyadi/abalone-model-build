@@ -245,7 +245,7 @@ def get_pipeline(
         framework_version=framework_version,
         instance_type="ml.m5.large",
         instance_count=1,
-        base_job_name="tf2-california-housing-evaluate",
+        base_job_name=f"{base_job_prefix}/script-CustomerChurn-eval",
         role=role,
     )
 
