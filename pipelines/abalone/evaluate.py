@@ -23,6 +23,8 @@ if __name__ == "__main__":
 
     model = tf.keras.models.load_model("./model/1")
     
+    print(model.summary())
+    
     model.compile(loss='mean_squared_error',optimizer='adam')
     
     test_path = "/opt/ml/processing/test/"
