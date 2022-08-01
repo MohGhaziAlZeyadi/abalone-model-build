@@ -85,6 +85,17 @@ if __name__ == "__main__":
 
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
     
+    
+    def standardize(train, test):
+        mean = np.mean(train, axis=0)
+        std = np.std(train, axis=0)+0.000001
+
+        X_train = (train - mean) / std
+        X_test = (test - mean) /std
+    return X_train, X_test
+    
+    x_train, x_test = standardize(x_train, x_test)
+    
     np.save(os.path.join(f"{base_dir}/train/", "x_train.npy"), x_train)
     np.save(os.path.join(f"{base_dir}/train/", "y_train.npy"), y_train)
     np.save(os.path.join(f"{base_dir}/test/", "x_test.npy"), x_test)
