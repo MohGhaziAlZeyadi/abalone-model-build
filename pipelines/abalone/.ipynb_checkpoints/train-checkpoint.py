@@ -69,7 +69,7 @@ def get_test_data(test_dir):
     model = Sequential()
 
     #Input Layer
-    model.add(Dense(X.shape[1], activation='relu', input_dim = X.shape[1]))
+    model.add(Dense(8, activation='relu', input_dim = 8))
 
     #Hidden Layer
     model.add(Dense(512,kernel_initializer='normal', activation='relu'))
