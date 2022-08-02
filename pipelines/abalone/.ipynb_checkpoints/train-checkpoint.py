@@ -2,6 +2,10 @@ import argparse
 import numpy as np
 import os
 import tensorflow as tf
+import subprocess
+import sys
+
+
 print(tf. __version__) 
 print(np. __version__) 
 print("************************************************************")
@@ -54,6 +58,7 @@ def get_model():
     hidden_2 = tf.keras.layers.Dense(4, activation='relu')(hidden_1)
     outputs = tf.keras.layers.Dense(1)(hidden_2)
     return tf.keras.Model(inputs=inputs, outputs=outputs)
+
 
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
