@@ -25,7 +25,7 @@ if __name__ == "__main__":
     
     print(model.summary())
     
-    model.compile(loss='mean_squared_error',optimizer='adam')
+    #model.compile(loss='mean_squared_error',optimizer='adam')
     
     test_path = "/opt/ml/processing/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))
