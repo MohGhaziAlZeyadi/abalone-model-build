@@ -3,6 +3,7 @@ import numpy as np
 import os
 import tensorflow as tf
 print(tf. __version__) 
+print(np. __version__) 
 print("************************************************************")
 def parse_args():
 

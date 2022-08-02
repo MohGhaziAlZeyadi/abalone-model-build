@@ -15,7 +15,15 @@ def install(package):
 if __name__ == "__main__":
 
     install("tensorflow==2.4.1")
+    print(tf. __version__) 
+    print(np. __version__) 
+    print("************************************************************")
+    
+    
+    
     model_path = f"/opt/ml/processing/model/model.tar.gz"
+    
+    print(model_path)
    
     with tarfile.open(model_path, "r:gz") as tar:
         tar.extractall("./model")
@@ -23,7 +31,9 @@ if __name__ == "__main__":
 
     model = tf.keras.models.load_model("./model/1")
     
-    model.compile(loss='mean_squared_error',optimizer='adam')
+    print(model.summary())
+    
+    #model.compile(loss='mean_squared_error',optimizer='adam')
     
     test_path = "/opt/ml/processing/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))
