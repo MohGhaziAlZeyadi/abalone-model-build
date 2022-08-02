@@ -5,6 +5,11 @@ import tensorflow as tf
 import subprocess
 import sys
 
+from tensorflow import keras
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Flatten, Dense, Softmax
+from tensorflow.keras import optimizers
+
 
 print(tf. __version__) 
 print(np. __version__) 
@@ -51,13 +56,34 @@ def get_test_data(test_dir):
 
 
 
-def get_model():
+# def get_model():
 
-    inputs = tf.keras.Input(shape=(8,))
-    hidden_1 = tf.keras.layers.Dense(8, activation='relu')(inputs)
-    hidden_2 = tf.keras.layers.Dense(4, activation='relu')(hidden_1)
-    outputs = tf.keras.layers.Dense(1)(hidden_2)
-    return tf.keras.Model(inputs=inputs, outputs=outputs)
+#     inputs = tf.keras.Input(shape=(8,))
+#     hidden_1 = tf.keras.layers.Dense(8, activation='relu')(inputs)
+#     hidden_2 = tf.keras.layers.Dense(4, activation='relu')(hidden_1)
+#     outputs = tf.keras.layers.Dense(1)(hidden_2)
+#     return tf.keras.Model(inputs=inputs, outputs=outputs)
+
+
+def get_test_data(test_dir):
+    model = Sequential()
+
+    #Input Layer
+    model.add(Dense(X.shape[1], activation='relu', input_dim = X.shape[1]))
+
+    #Hidden Layer
+    model.add(Dense(512,kernel_initializer='normal', activation='relu'))
+    model.add(Dense(512,kernel_initializer='normal', activation='relu'))
+    model.add(Dense(256,kernel_initializer='normal', activation='relu'))
+    model.add(Dense(128,kernel_initializer='normal', activation='relu'))
+    model.add(Dense(64,kernel_initializer='normal', activation='relu'))
+    model.add(Dense(32,kernel_initializer='normal', activation='relu'))
+    #Output Layer
+    model.add(Dense(1,kernel_initializer='normal', activation = 'relu'))
+    
+    return model
+
+
 
 
 def install(package):
@@ -86,9 +112,18 @@ if __name__ == "__main__":
 
 
     model = get_model()
-    #optimizer = tf.keras.optimizers.SGD(learning_rate)
-    model.compile(loss='mean_squared_error',optimizer='adam')
-    #model.compile(optimizer=optimizer, loss='mse')
+    
+    
+    ##Compile the network 
+    ##optimizer = tf.keras.optimizers.SGD(learning_rate)
+    #model.compile(loss='mean_squared_error',optimizer='adam')
+    ##model.compile(optimizer=optimizer, loss='mse')
+
+    model.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
+    print(model.summary())
+    
+    
+    
     model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test))
 
     # evaluate on test set
