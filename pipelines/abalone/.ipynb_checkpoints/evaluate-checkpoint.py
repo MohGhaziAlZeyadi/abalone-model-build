@@ -15,7 +15,7 @@ def install(package):
 if __name__ == "__main__":
 
     #install("tensorflow==2.4.1")
-    install("tensorflow==1.5.0")
+    install("tensorflow==1.15.0")
     install("numpy==1.21.0")
 
     
