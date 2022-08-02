@@ -55,8 +55,16 @@ def get_model():
     outputs = tf.keras.layers.Dense(1)(hidden_2)
     return tf.keras.Model(inputs=inputs, outputs=outputs)
 
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+
+
 
 if __name__ == "__main__":
+    
+    install("tensorflow==2.4.1")
+    install("numpy==1.19.5")
 
     args, _ = parse_args()
 
