@@ -169,9 +169,10 @@ def get_pipeline(
         name="PreprocessAbaloneData",  # choose any name
         processor=sklearn_processor,
         outputs=[
-            ProcessingOutput(output_name="train", source="/opt/ml/processing/train"),
-            #ProcessingOutput(output_name="validation", source="/opt/ml/processing/validation"),
-            ProcessingOutput(output_name="test", source="/opt/ml/processing/test"),
+#             ProcessingOutput(output_name="train", source="/opt/ml/processing/train"),
+#             ProcessingOutput(output_name="test", source="/opt/ml/processing/test"),
+              ProcessingOutput(output_name="train", source="/opt/ml/train"),
+              ProcessingOutput(output_name="test", source="/opt/ml/test"),
         ],
         code=os.path.join(BASE_DIR, "preprocess.py"),
         job_arguments=["--input-data", input_data],
@@ -267,17 +268,20 @@ def get_pipeline(
         inputs=[
             ProcessingInput(
                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
-                destination="/opt/ml/processing/model",
+                #destination="/opt/ml/processing/model",
+                destination="/opt/ml/model",
             ),
             ProcessingInput(
                 source=step_process.properties.ProcessingOutputConfig.Outputs[
                     "test"
                 ].S3Output.S3Uri,
-                destination="/opt/ml/processing/test",
+                #destination="/opt/ml/processing/test",
+                destination="/opt/ml/test",
             ),
         ],
         outputs=[
-            ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation"),
+            #ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation"),
+             ProcessingOutput(output_name="evaluation", source="/opt/ml/evaluation"),
         ],
         code=os.path.join(BASE_DIR, "evaluate.py"),
         property_files=[evaluation_report],

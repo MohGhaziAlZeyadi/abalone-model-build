@@ -39,7 +39,8 @@ if __name__ == "__main__":
     
     #model.compile(loss='mean_squared_error',optimizer='adam')
     
-    test_path = "/opt/ml/processing/test/"
+    #test_path = "/opt/ml/processing/test/"
+    test_path = "/opt/ml/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))
     y_test = np.load(os.path.join(test_path, "y_test.npy"))
     print('x test', x_test.shape,'y test', y_test.shape)
@@ -54,7 +55,9 @@ if __name__ == "__main__":
         },
     }
 
-    output_dir = "/opt/ml/processing/evaluation"
+    #output_dir = "/opt/ml/processing/evaluation"
+    output_dir = "/opt/ml/evaluation"
+    
     pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     evaluation_path = f"{output_dir}/evaluation.json"
