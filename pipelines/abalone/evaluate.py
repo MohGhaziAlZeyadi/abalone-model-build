@@ -43,7 +43,7 @@ if __name__ == "__main__":
     y_test = np.load(os.path.join(test_path, "y_test.npy"))
     print('x test', x_test.shape,'y test', y_test.shape)
     
-    scores = model.evaluate(x_test, y_test, verbose=2)
+    scores = model.evaluate(x_test, y_test, verbose=1)
     print("\nThe Test MSE is :", scores)
 
     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
