@@ -15,10 +15,7 @@ def install(package):
 if __name__ == "__main__":
 
     install("tensorflow==2.4.1")
-    print(tf. __version__) 
-    print(np. __version__) 
-    print("************************************************************")
-    
+
     
     
     model_path = f"/opt/ml/processing/model/model.tar.gz"
@@ -28,6 +25,11 @@ if __name__ == "__main__":
     with tarfile.open(model_path, "r:gz") as tar:
         tar.extractall("./model")
     import tensorflow as tf
+    
+    print(tf. __version__) 
+    print(np. __version__) 
+    print("************************************************************")
+    
 
     model = tf.keras.models.load_model("./model/1")
     
