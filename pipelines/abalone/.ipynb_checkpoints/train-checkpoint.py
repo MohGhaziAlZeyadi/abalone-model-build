@@ -80,15 +80,18 @@ if __name__ == "__main__":
     # evaluate on test set
     scores = model.evaluate(x_test, y_test, batch_size, verbose=2)
     print("\nTest MSE :", scores)
-
+    
+    model_path = args.sm_model_dir + '/1'
+    print("model_path = ", model_path)
+       
     # save model
-    #model.save(args.sm_model_dir + '/1')
+    model.save(args.sm_model_dir + '/1')
     
 
-    tf.keras.models.save_model(
-      model,
-      os.path.join(args.sm_model_dir, '/1'),
-      overwrite=True,
-      include_optimizer=True
-     )
+#     tf.keras.models.save_model(
+#       model,
+#       os.path.join(args.sm_model_dir, '/1'),
+#       overwrite=True,
+#       include_optimizer=True
+#      )
 
