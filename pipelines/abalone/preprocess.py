@@ -33,8 +33,7 @@ if __name__ == "__main__":
     parser.add_argument("--input-data", type=str, required=True)
     args = parser.parse_args()
 
-    #base_dir = "/opt/ml/processing"
-    base_dir = "/opt/ml"
+    base_dir = "/opt/ml/processing"
     pathlib.Path(f"{base_dir}/data").mkdir(parents=True, exist_ok=True)
     input_data = args.input_data
     print(input_data)
