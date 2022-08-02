@@ -84,7 +84,7 @@ if __name__ == "__main__":
     # save model
     #model.save(args.sm_model_dir + '/1')
     
-    
+    print("Model Path: ", os.path.join(args.sm_model_dir, 'model/1'))
     tf.keras.models.save_model(
       model,
       os.path.join(args.sm_model_dir, 'model/1'),
