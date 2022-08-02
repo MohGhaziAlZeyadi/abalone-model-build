@@ -19,7 +19,8 @@ if __name__ == "__main__":
 
     
     
-    model_path = f"/opt/ml/processing/model/model.tar.gz"
+    #model_path = f"/opt/ml/processing/model/model.tar.gz"
+    model_path = f"/opt/ml/model/model.tar.gz"
     
     print(model_path)
    
