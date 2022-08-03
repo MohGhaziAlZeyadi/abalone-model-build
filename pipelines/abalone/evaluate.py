@@ -56,7 +56,7 @@ if __name__ == "__main__":
     }
 
     output_dir = "/opt/ml/processing/evaluation"
-    #output_dir = "/opt/ml/evaluation"
+
     
     pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
 

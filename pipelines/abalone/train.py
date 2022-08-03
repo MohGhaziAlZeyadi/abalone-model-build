@@ -10,6 +10,10 @@ from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Flatten, Dense, Softmax
 from tensorflow.keras import optimizers
 
+import json
+import pathlib
+import tarfile
+
 
 print(tf. __version__) 
 print(np. __version__) 
@@ -136,6 +140,34 @@ if __name__ == "__main__":
        
     # save model
     model.save(args.sm_model_dir + '/1')
+    
+    print("***************Loaded Model*******************")
+    
+    model_path = f"/opt/ml/processing/model/model.tar.gz"    
+     with tarfile.open(model_path, "r:gz") as tar:
+        tar.extractall("./model")
+    
+    model_load = tf.keras.models.load_model("./model/1")
+    scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
+    print("\nTest MSE :", scores_loaded)
+    
+    
+
+    report_dict = {
+        "regression_metrics": {
+            "mse": {"value": scores_loaded, "standard_deviation": "NaN"},
+        },
+    }
+
+    output_dir = "/opt/ml/processing/evaluation"
+
+    
+    pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+    evaluation_path = f"{output_dir}/evaluation.json"
+    with open(evaluation_path, "w") as f:
+        f.write(json.dumps(report_dict))
+
     
 
 #     tf.keras.models.save_model(
