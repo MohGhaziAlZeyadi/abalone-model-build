@@ -139,6 +139,8 @@ if __name__ == "__main__":
     print("model_path = ", model_path)
        
     # save model
+    model_path_test = args.sm_model_dir + '/1'
+    print(model_path_test)
     model.save(args.sm_model_dir + '/1')
     
     print("***************Loaded Model*******************")
