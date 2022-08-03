@@ -65,7 +65,7 @@ def get_test_data(test_dir):
 #     return tf.keras.Model(inputs=inputs, outputs=outputs)
 
 
-def def get_model():
+def get_model():
     model = Sequential()
     #Input Layer
     model.add(Dense(8, activation='relu', input_dim = 8))
