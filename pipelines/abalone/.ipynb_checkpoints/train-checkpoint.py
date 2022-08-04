@@ -155,29 +155,18 @@ if __name__ == "__main__":
     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
     print("\nTest MSE after loading the model :", scores_loaded)
     
-    
+     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
+    report_dict = {
+        "regression_metrics": {
+            "mse": {"value": scores_loaded, "standard_deviation": "NaN"},
+        },
+    }
 
-#     report_dict = {
-#         "regression_metrics": {
-#             "mse": {"value": scores_loaded, "standard_deviation": "NaN"},
-#         },
-#     }
-
-#     output_dir = "/opt/ml/processing/evaluation"
-
-    
-#     pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
-
-#     evaluation_path = f"{output_dir}/evaluation.json"
-#     with open(evaluation_path, "w") as f:
-#         f.write(json.dumps(report_dict))
+    output_dir = "/opt/ml/processing/evaluation"
 
     
+    pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-#     tf.keras.models.save_model(
-#       model,
-#       os.path.join(args.sm_model_dir, '/1'),
-#       overwrite=True,
-#       include_optimizer=True
-#      )
-
+    evaluation_path = f"{output_dir}/evaluation.json"
+    with open(evaluation_path, "w") as f:
+        f.write(json.dumps(report_dict))
