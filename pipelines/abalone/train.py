@@ -135,13 +135,15 @@ if __name__ == "__main__":
     scores = model.evaluate(x_test, y_test, batch_size, verbose=1)
     print("\nTest MSE :", scores)
     
-    model_path = args.sm_model_dir + '/1'
-    print("model_path = ", model_path)
+#     model_path = args.sm_model_dir + '/1'
+#     print("model_path = ", model_path)
        
     # save model
-    model_path_test = args.sm_model_dir + '/1'
-    print(model_path_test)
-    model.save(args.sm_model_dir + '/1')
+#     model_path_test = args.sm_model_dir + '/1'
+#     print(model_path_test)
+    #tf.saved_model.save(model, export_path_sm)
+    tf.saved_model.save(model, args.sm_model_dir + '/1')    
+    #model.save(args.sm_model_dir + '/1')
     
     print("***************Loaded Model*******************")
     
@@ -151,7 +153,7 @@ if __name__ == "__main__":
     
     model_load = tf.keras.models.load_model(args.sm_model_dir + '/1')
     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
-    print("\nTest MSE :", scores_loaded)
+    print("\nTest MSE after loading the model :", scores_loaded)
     
     
 

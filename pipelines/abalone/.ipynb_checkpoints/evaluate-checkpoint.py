@@ -60,7 +60,8 @@ if __name__ == "__main__":
     print('x test', x_test.shape,'y test', y_test.shape)
     
     
-    model_load = tf.keras.models.load_model(args.sm_model_dir + '/1')
+    #model_load = tf.keras.models.load_model(args.sm_model_dir + '/1')
+    model_load = tf.saved_model.load(args.sm_model_dir + '/1')
     
     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
     print("\nTest MSE :", scores_loaded)
