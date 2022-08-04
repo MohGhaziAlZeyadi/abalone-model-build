@@ -31,9 +31,12 @@ if __name__ == "__main__":
 
     install("tensorflow==2.4.1")
     install("numpy==1.19.2")
+    intall("h5py")
+    
     
     import tensorflow as tf
     from tensorflow import keras
+    import h5py
     
     args, _ = parse_args()
 
@@ -58,6 +61,7 @@ if __name__ == "__main__":
     
     
     model_load = tf.keras.models.load_model(args.sm_model_dir + '/1')
+    
     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
     print("\nTest MSE :", scores_loaded)
     
