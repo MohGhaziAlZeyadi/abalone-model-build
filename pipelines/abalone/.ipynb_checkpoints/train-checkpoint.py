@@ -145,30 +145,66 @@ if __name__ == "__main__":
     
     print("***************Loaded Model*******************")
     
-    model_path = f"/opt/ml/processing/model/1/model.tar.gz"
-    with tarfile.open(model_path, "r:gz") as tar:
-        tar.extractall("./model")
     
-    model_load = tf.keras.models.load_model("./model/1")
-    scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
-    print("\nTest MSE :", scores_loaded)
+    # Import libraries
+    import os
+    import time
+
+    # Insert the directory path in here
+    path = model_path_test
+
+    # Extracting all the contents in the directory corresponding to path
+    l_files = os.listdir(path)
+
+    # Iterating over all the files
+    for file in l_files:
+
+      # Instantiating the path of the file
+        file_path = f'{path}\\{file}'
+
+        # Checking whether the given file is a directory or not
+        if os.path.isfile(file_path):
+            try:
+                # Printing the file pertaining to file_path
+                os.startfile(file_path, 'print')
+                print(f'Printing {file}')
+
+                # Sleeping the program for 5 seconds so as to account the
+          # steady processing of the print operation.
+                time.sleep(5)
+            except:
+                # Catching if any error occurs and alerting the user
+                print(f'ALERT: {file} could not be printed! Please check\
+                the associated softwares, or the file type.')
+        else:
+            print(f'ALERT: {file} is not a file, so can not be printed!')
+
+    print('Task finished!')
+    
+#     model_path = f"/opt/ml/processing/model/1/model.tar.gz"
+#     with tarfile.open(model_path, "r:gz") as tar:
+#         tar.extractall("./model")
+    
+#     model_load = tf.keras.models.load_model("./model/1")
+#     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
+#     print("\nTest MSE :", scores_loaded)
     
     
 
-    report_dict = {
-        "regression_metrics": {
-            "mse": {"value": scores_loaded, "standard_deviation": "NaN"},
-        },
-    }
+#     report_dict = {
+#         "regression_metrics": {
+#             "mse": {"value": scores_loaded, "standard_deviation": "NaN"},
+#         },
+#     }
 
-    output_dir = "/opt/ml/processing/evaluation"
+#     output_dir = "/opt/ml/processing/evaluation"
 
     
-    pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
+#     pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    evaluation_path = f"{output_dir}/evaluation.json"
-    with open(evaluation_path, "w") as f:
-        f.write(json.dumps(report_dict))
+#     evaluation_path = f"{output_dir}/evaluation.json"
+#     with open(evaluation_path, "w") as f:
+#         f.write(json.dumps(report_dict))
 
     
 
