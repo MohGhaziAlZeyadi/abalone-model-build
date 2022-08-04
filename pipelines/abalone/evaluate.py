@@ -8,35 +8,41 @@ import pathlib
 import tarfile
 
 
+
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+    
+
+    
+def parse_args():
+
+    parser = argparse.ArgumentParser()
+
+    # model directory
+    parser.add_argument('--sm-model-dir', type=str, default=os.environ.get('SM_MODEL_DIR'))
+
+    return parser.parse_known_args()
+
+
 
 
 if __name__ == "__main__":
 
     install("tensorflow==2.4.1")
     install("numpy==1.19.2")
+    
+    args, _ = parse_args()
 
-    
-    
-    #model_path = f"/opt/ml/processing/model/model.tar.gz"
-    model_path = f"/opt/ml/model/1"
-    #model_path = f"/opt/ml/model/model.tar.gz"
-    
-    print(model_path)
-   
-    with tarfile.open(model_path, "r:gz") as tar:
-        tar.extractall("./model")
-    import tensorflow as tf
+    model_path = args.sm_model_dir + '/1'
     
     print(tf. __version__) 
     print(np. __version__) 
     print("************************************************************")
     
 
-    model = tf.keras.models.load_model("./model/1")
+#     model = tf.keras.models.load_model("./model/1")
     
-    print(model.summary())
+#     print(model.summary())
     
     #model.compile(loss='mean_squared_error',optimizer='adam')
     
@@ -46,9 +52,11 @@ if __name__ == "__main__":
     y_test = np.load(os.path.join(test_path, "y_test.npy"))
     print('x test', x_test.shape,'y test', y_test.shape)
     
-    scores = model.evaluate(x_test, y_test, verbose=1)
-    print("\nThe Test MSE is :", scores)
-
+    
+    model_load = tf.keras.models.load_model(args.sm_model_dir + '/1')
+    scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
+    print("\nTest MSE :", scores_loaded)
+    
     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
     report_dict = {
         "regression_metrics": {
@@ -66,4 +74,4 @@ if __name__ == "__main__":
         f.write(json.dumps(report_dict))
 
         
-        
+    
