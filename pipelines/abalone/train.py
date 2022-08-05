@@ -135,49 +135,14 @@ if __name__ == "__main__":
     scores = model.evaluate(x_test, y_test, batch_size, verbose=1)
     print("\nTest MSE :", scores)
     
-#     model_path = args.sm_model_dir + '/1'
-#     print("model_path = ", model_path)
-       
+
     # save model
-#     model_path_test = args.sm_model_dir + '/1'
-#     print(model_path_test)
-    #tf.saved_model.save(model, export_path_sm)
-    tf.saved_model.save(model, args.sm_model_dir + '/1')    
-    #model.save(args.sm_model_dir + '/1')
+    model.save(args.sm_model_dir + '/1')
     
     print("***************Loaded Model*******************")
-    
-#     model_path = f"/opt/ml/processing/model/1/model.tar.gz"
-#     with tarfile.open(model_path, "r:gz") as tar:
-#         tar.extractall("./model")
-    
+
     model_load = tf.keras.models.load_model(args.sm_model_dir + '/1')
     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
     print("\nTest MSE after loading the model :", scores_loaded)
     
     
-
-#     report_dict = {
-#         "regression_metrics": {
-#             "mse": {"value": scores_loaded, "standard_deviation": "NaN"},
-#         },
-#     }
-
-#     output_dir = "/opt/ml/processing/evaluation"
-
-    
-#     pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
-
-#     evaluation_path = f"{output_dir}/evaluation.json"
-#     with open(evaluation_path, "w") as f:
-#         f.write(json.dumps(report_dict))
-
-    
-
-#     tf.keras.models.save_model(
-#       model,
-#       os.path.join(args.sm_model_dir, '/1'),
-#       overwrite=True,
-#       include_optimizer=True
-#      )
-
