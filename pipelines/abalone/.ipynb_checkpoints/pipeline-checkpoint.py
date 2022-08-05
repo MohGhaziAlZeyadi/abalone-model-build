@@ -37,8 +37,11 @@ from sagemaker.workflow.pipeline import Pipeline
 from sagemaker.workflow.properties import PropertyFile
 from sagemaker.workflow.step_collections import RegisterModel
 from sagemaker.workflow.steps import ProcessingStep, TrainingStep
-
 from sagemaker.workflow.pipeline_context import PipelineSession
+
+from sagemaker.tensorflow import TensorFlow
+from sagemaker.workflow.steps import TrainingStep
+import time
 ############################################################################################
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -192,13 +195,14 @@ def get_pipeline(
     )
     
 
-    from sagemaker.tensorflow import TensorFlow
-    from sagemaker.workflow.steps import TrainingStep
-    import time
+   
 
     # Where to store the trained model
     #model_path = f"s3://{bucket}/{prefix}/model/"
-    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
+    #model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
+    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/model/"
+    
+    
     
     print("model_path : ", model_path)
     
