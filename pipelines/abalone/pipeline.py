@@ -202,10 +202,6 @@ def get_pipeline(
     #model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/model/"
     
-    
-    
-    print("model_path : ", model_path)
-    
 
     hyperparameters = {"epochs": 10 }
     tensorflow_version = "2.4.1"
@@ -271,7 +267,8 @@ def get_pipeline(
         inputs=[
             ProcessingInput(
                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
-                destination="/opt/ml/processing/model",
+                #destination="/opt/ml/processing/model",
+                destination="/opt/ml/model",
                 
             ),
             ProcessingInput(
