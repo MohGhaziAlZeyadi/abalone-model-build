@@ -62,7 +62,7 @@ if __name__ == "__main__":
     #model_load = tf.saved_model.load(args.sm_model_dir + '/1')
     
     
-    model = keras.models.load_model(args.sm_model_dir + '/1')
+    model = keras.models.load_model(args.sm_model_dir + '/processing/1')
     
     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
     print("\nTest MSE :", scores_loaded)
