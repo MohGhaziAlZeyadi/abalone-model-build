@@ -254,7 +254,7 @@ def get_pipeline(
         inputs=[
             ProcessingInput(
                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
-                destination="/opt/ml/processing/model",
+                destination="/opt/ml/model",
             ),
             ProcessingInput(
                 source=step_process.properties.ProcessingOutputConfig.Outputs[
