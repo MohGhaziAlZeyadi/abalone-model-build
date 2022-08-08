@@ -151,8 +151,9 @@ def get_pipeline(
 
     # Parameters for pipeline execution
     processing_instance_count = ParameterInteger(name="ProcessingInstanceCount", default_value=1)
-    training_instance_type = ParameterString(name="TrainingInstanceType", default_value="ml.m5.large")
-    model_approval_status = ParameterString(name="ModelApprovalStatus",default_value="PendingManualApproval",  # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
+    training_instance_type = ParameterString(name="TrainingInstanceType",default_value="ml.m5.large")
+    model_approval_status = ParameterString(name="ModelApprovalStatus",default_value="PendingManualApproval",  
+                                            # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
 )
     input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/CaliforniaHousingPricesData/data/housing.csv",# Change this to point to the s3 location of your raw input data.
     )
@@ -200,7 +201,8 @@ def get_pipeline(
     # Where to store the trained model
     #model_path = f"s3://{bucket}/{prefix}/model/"
     #model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
-    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/processing/model"
+    #model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/processing/model"
+    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
 
     hyperparameters = {"epochs": 10 }
@@ -239,53 +241,89 @@ def get_pipeline(
     #####################################
     # Processing step for evaluation
     #####################################
-
-    from sagemaker.workflow.properties import PropertyFile
-
-    # Create SKLearnProcessor object.
-    # The object contains information about what container to use, what instance type etc.
-    framework_version = "0.23-1"
-    evaluate_model_processor = SKLearnProcessor(
-        framework_version=framework_version,
-        instance_type="ml.m5.large",
+     script_eval = ScriptProcessor(
+        image_uri=image_uri,
+        command=["python3"],
+        instance_type=processing_instance_type,
         instance_count=1,
-        base_job_name= f"{base_job_prefix}/script-abalone-eval",
+        base_job_name=f"{base_job_prefix}/script-abalone-eval",
+        sagemaker_session=pipeline_session,
         role=role,
     )
-
-    # Create a PropertyFile
-    # A PropertyFile is used to be able to reference outputs from a processing step, for instance to use in a condition step.
-    # For more information, visit https://docs.aws.amazon.com/sagemaker/latest/dg/build-and-manage-propertyfile.html
-    evaluation_report = PropertyFile(
-        name="EvaluationReport", output_name="evaluation", path="evaluation.json"
-    )
-
-    # Use the evaluate_model_processor in a Sagemaker pipelines ProcessingStep.
-    step_eval = ProcessingStep(
-        name= "EvaluateAbaloneModel",
-        processor=evaluate_model_processor,
+    step_args = script_eval.run(
         inputs=[
             ProcessingInput(
                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
-                #destination="/opt/ml/processing/model",
                 destination="/opt/ml/processing/model",
-                
             ),
             ProcessingInput(
                 source=step_process.properties.ProcessingOutputConfig.Outputs[
                     "test"
                 ].S3Output.S3Uri,
                 destination="/opt/ml/processing/test",
-                
             ),
         ],
         outputs=[
             ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation"),
-             
         ],
         code=os.path.join(BASE_DIR, "evaluate.py"),
+    )
+    evaluation_report = PropertyFile(
+        name="AbaloneEvaluationReport",
+        output_name="evaluation",
+        path="evaluation.json",
+    )
+    step_eval = ProcessingStep(
+        name="EvaluateAbaloneModel",
+        step_args=step_args,
         property_files=[evaluation_report],
     )
+
+#     from sagemaker.workflow.properties import PropertyFile
+
+#     # Create SKLearnProcessor object.
+#     # The object contains information about what container to use, what instance type etc.
+#     framework_version = "0.23-1"
+#     evaluate_model_processor = SKLearnProcessor(
+#         framework_version=framework_version,
+#         instance_type="ml.m5.large",
+#         instance_count=1,
+#         base_job_name= f"{base_job_prefix}/script-abalone-eval",
+#         role=role,
+#     )
+
+#     # Create a PropertyFile
+#     # A PropertyFile is used to be able to reference outputs from a processing step, for instance to use in a condition step.
+#     # For more information, visit https://docs.aws.amazon.com/sagemaker/latest/dg/build-and-manage-propertyfile.html
+#     evaluation_report = PropertyFile(
+#         name="EvaluationReport", output_name="evaluation", path="evaluation.json"
+#     )
+
+#     # Use the evaluate_model_processor in a Sagemaker pipelines ProcessingStep.
+#     step_eval = ProcessingStep(
+#         name= "EvaluateAbaloneModel",
+#         processor=evaluate_model_processor,
+#         inputs=[
+#             ProcessingInput(
+#                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
+#                 destination="/opt/ml/processing/model",
+                
+#             ),
+#             ProcessingInput(
+#                 source=step_process.properties.ProcessingOutputConfig.Outputs[
+#                     "test"
+#                 ].S3Output.S3Uri,
+#                 destination="/opt/ml/processing/test",
+                
+#             ),
+#         ],
+#         outputs=[
+#             ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation"),
+             
+#         ],
+#         code=os.path.join(BASE_DIR, "evaluate.py"),
+#         property_files=[evaluation_report],
+#     )
     
     
     #########################################################
