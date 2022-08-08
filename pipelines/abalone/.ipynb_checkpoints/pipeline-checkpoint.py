@@ -129,7 +129,7 @@ def get_pipeline(
     default_bucket=None,
     model_package_group_name="AbalonePackageGroup",
     pipeline_name="AbalonePipeline",
-    base_job_prefix="Abalone",
+    base_job_prefix="Moh-test",
     processing_instance_type="ml.m5.large",
     training_instance_type="ml.m5.large",
 ):
