@@ -205,7 +205,7 @@ def get_pipeline(
     model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
 
-    hyperparameters = {"epochs": 10 }
+    hyperparameters = {"epochs": 3 }
     tensorflow_version = "2.4.1"
     python_version = "py37"
 
