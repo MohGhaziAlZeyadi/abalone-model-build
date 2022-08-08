@@ -130,8 +130,8 @@ def get_pipeline(
     model_package_group_name="AbalonePackageGroup",
     pipeline_name="AbalonePipeline",
     base_job_prefix="Abalone",
-    processing_instance_type="ml.m5.xlarge",
-    training_instance_type="ml.m5.xlarge",
+    processing_instance_type="ml.t3.medium",
+    training_instance_type="ml.t3.medium",
 ):
     """Gets a SageMaker ML Pipeline instance working with on CustomerChurn data.
 
@@ -151,7 +151,7 @@ def get_pipeline(
 
     # Parameters for pipeline execution
     processing_instance_count = ParameterInteger(name="ProcessingInstanceCount", default_value=1)
-    training_instance_type = ParameterString(name="TrainingInstanceType", default_value="ml.m5.xlarge")
+    training_instance_type = ParameterString(name="TrainingInstanceType", default_value="ml.t3.medium")
     model_approval_status = ParameterString(name="ModelApprovalStatus",default_value="PendingManualApproval",  # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
 )
     input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/CaliforniaHousingPricesData/data/housing.csv",# Change this to point to the s3 location of your raw input data.
@@ -191,7 +191,7 @@ def get_pipeline(
         region=region,
         version="1.0-1",
         py_version="py3",
-        instance_type="ml.m5.xlarge",
+        instance_type="ml.t3.medium",
     )
     
 
@@ -200,7 +200,7 @@ def get_pipeline(
     # Where to store the trained model
     #model_path = f"s3://{bucket}/{prefix}/model/"
     #model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
-    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/model/"
+    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/processing/model/"
     
 
     hyperparameters = {"epochs": 10 }
@@ -210,7 +210,7 @@ def get_pipeline(
     tf2_estimator = TensorFlow(
         source_dir=BASE_DIR,
         entry_point="train.py",
-        instance_type="ml.m5.large",
+        instance_type="ml.t3.medium",
         instance_count=1,
         framework_version=tensorflow_version,
         role=role,
@@ -247,7 +247,7 @@ def get_pipeline(
     framework_version = "0.23-1"
     evaluate_model_processor = SKLearnProcessor(
         framework_version=framework_version,
-        instance_type="ml.m5.large",
+        instance_type="ml.t3.medium",
         instance_count=1,
         base_job_name= f"{base_job_prefix}/script-abalone-eval",
         role=role,
@@ -268,7 +268,7 @@ def get_pipeline(
             ProcessingInput(
                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
                 #destination="/opt/ml/processing/model",
-                destination="/opt/ml/model",
+                destination="/opt/ml/processing/model",
                 
             ),
             ProcessingInput(
@@ -308,8 +308,8 @@ def get_pipeline(
         model_data=step_train.properties.ModelArtifacts.S3ModelArtifacts,
         content_types=["text/csv"],
         response_types=["text/csv"],
-        inference_instances=["ml.t2.medium", "ml.m5.large"],
-        transform_instances=["ml.m5.large"],
+        inference_instances=["ml.t2.medium", "ml.t3.medium"],
+        transform_instances=["ml.t3.medium"],
         model_package_group_name=model_package_group_name,
         approval_status=model_approval_status,
         model_metrics=model_metrics,
