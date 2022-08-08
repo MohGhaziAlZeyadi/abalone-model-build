@@ -241,7 +241,7 @@ def get_pipeline(
     #####################################
     # Processing step for evaluation
     #####################################
-     script_eval = ScriptProcessor(
+    script_eval = ScriptProcessor(
         image_uri=image_uri,
         command=["python3"],
         instance_type=processing_instance_type,
