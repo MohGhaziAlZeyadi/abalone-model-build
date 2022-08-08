@@ -138,11 +138,11 @@ if __name__ == "__main__":
    
 
     # save model
-    model.save(args.sm_model_dir + "/1")
+    model.save("/opt/ml/processing/model/1")
     print("The model saved into:- ", args.sm_model_dir + "/1")
     print("***************Loaded Model*******************")
 
-    model_load = tf.keras.models.load_model("/opt/ml/model/1")
+    model_load = tf.keras.models.load_model("/opt/ml/processing/model/1")
     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
     print("\nTest MSE after loading the model :", scores_loaded)
     
