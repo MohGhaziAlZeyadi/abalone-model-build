@@ -38,7 +38,7 @@ if __name__ == "__main__":
     
     args, _ = parse_args()
 
-    model_path = args.sm_model_dir + '/1'
+    #model_path = args.sm_model_dir + '/1'
     
     print(tf. __version__) 
     print(np. __version__) 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     #model_load = tf.saved_model.load(args.sm_model_dir + '/1')
     
     #model_path = "/opt/ml/model/1"
-    model_path = "/opt/ml/processing/model/1"
+    model_path = "/opt/ml/processing/model"
     model = keras.models.load_model(model_path)
     
     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
