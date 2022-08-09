@@ -97,6 +97,7 @@ def install(package):
 if __name__ == "__main__":
 
     install("tensorflow==2.4.1")
+    install("sagemaker==2.91.1")
     model_path = f"/opt/ml/processing/model/model.tar.gz"
     with tarfile.open(model_path, "r:gz") as tar:
         tar.extractall("./model")
@@ -105,8 +106,8 @@ if __name__ == "__main__":
     model = tf.keras.models.load_model("./model/1")
     print(model.summary())
     
-    from tensorflow.keras import optimizers
-    model.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
+#     from tensorflow.keras import optimizers
+#     model.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
     
     
     test_path = "/opt/ml/processing/test/"

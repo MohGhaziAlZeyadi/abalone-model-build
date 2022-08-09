@@ -20,13 +20,6 @@
 
 Implements a get_pipeline(**kwargs) method.
 """
-import sys
-
-!{sys.executable} -m pip install "sagemaker==2.91.1"
-
-
-
-
 import os
 import boto3
 import sagemaker
