@@ -103,6 +103,7 @@ if __name__ == "__main__":
     import tensorflow as tf
 
     model = tf.keras.models.load_model("./model/1")
+    print(model.summary())
     test_path = "/opt/ml/processing/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))
     y_test = np.load(os.path.join(test_path, "y_test.npy"))
