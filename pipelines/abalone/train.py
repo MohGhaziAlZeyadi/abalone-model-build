@@ -72,13 +72,13 @@ def get_test_data(test_dir):
 def get_model():
     model = Sequential()
     #Input Layer
-    model.add(Dense(8, activation='relu', input_dim = 8))
+    model.add(Dense(8, activation='relu', input_dim = 8), name="1stlayer")
 
     #Hidden Layer
-    model.add(Dense(64,kernel_initializer='normal', activation='relu'))
-    model.add(Dense(32,kernel_initializer='normal', activation='relu'))
+    model.add(Dense(64,kernel_initializer='normal', activation='relu'), name="2ndlayer")
+    model.add(Dense(32,kernel_initializer='normal', activation='relu'), name="3rdlayer")
     #Output Layer
-    model.add(Dense(1,kernel_initializer='normal', activation = 'relu'))
+    model.add(Dense(1,kernel_initializer='normal', activation = 'relu'),  name="lastlayer")
     
     return model
 

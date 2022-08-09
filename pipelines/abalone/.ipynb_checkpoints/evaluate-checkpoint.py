@@ -13,6 +13,46 @@ import argparse
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
+    
+def model_summary(model):
+    # Iterate over model layers
+    for layer in model.layers:
+        print(layer.name, layer)
+
+    # firstlayer
+    print(model.layers[0].weights)
+    print(model.layers[0].bias.numpy())
+    print(model.layers[0].bias_initializer)
+
+    # secondlayer
+    print(model.layers[1].weights)
+    print(model.layers[1].bias.numpy())
+    print(model.layers[1].bias_initializer)
+
+    # 3rdlayer
+    print(model.layers[2].weights)
+    print(model.layers[2].bias.numpy())
+    print(model.layers[2].bias_initializer)
+    
+    # lastlayer
+    print(model.layers[3].weights)
+    print(model.layers[3].bias.numpy())
+    print(model.layers[3].bias_initializer)
+
+    # firstlayer by name
+    print((model.get_layer("1stlayer").weights))
+
+    # secondlayer by name
+    print((model.get_layer("2ndlayer").weights))
+    
+    # 3rdlayer by name
+    print((model.get_layer("3rdlayer").weights))
+
+    # lastlayer by name
+    print((model.get_layer("lastlayer").weights))
+
+
+
 
 if __name__ == "__main__":
 
@@ -20,10 +60,17 @@ if __name__ == "__main__":
     model_path = f"/opt/ml/processing/model/model.tar.gz"
     with tarfile.open(model_path, "r:gz") as tar:
         tar.extractall("./model")
+        
+        
     import tensorflow as tf
+    from tensorflow import keras
+    from tensorflow.keras import optimizers
 
-    model = tf.keras.models.load_model("./model/1")
-    print(model.summary())
+    model_loded = tf.keras.models.load_model("./model/1")
+    model_loded.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
+    print(model_loded.summary())
+    
+    model_summary(model_loded)
     
     
     test_path = "/opt/ml/processing/test/"
@@ -36,7 +83,7 @@ if __name__ == "__main__":
     
     
     
-    scores = model.evaluate(x_test, y_test, verbose=1)
+    scores = model_loded.evaluate(x_test, y_test, verbose=1)
     print("\nTest MSE :", scores)
 
     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
