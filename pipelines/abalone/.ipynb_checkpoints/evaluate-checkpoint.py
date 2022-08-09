@@ -104,6 +104,11 @@ if __name__ == "__main__":
 
     model = tf.keras.models.load_model("./model/1")
     print(model.summary())
+    
+    from tensorflow.keras import optimizers
+    model.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
+    
+    
     test_path = "/opt/ml/processing/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))
     y_test = np.load(os.path.join(test_path, "y_test.npy"))
