@@ -75,10 +75,6 @@ def get_model():
     model.add(Dense(8, activation='relu', input_dim = 8))
 
     #Hidden Layer
-    model.add(Dense(512,kernel_initializer='normal', activation='relu'))
-    model.add(Dense(512,kernel_initializer='normal', activation='relu'))
-    model.add(Dense(256,kernel_initializer='normal', activation='relu'))
-    model.add(Dense(128,kernel_initializer='normal', activation='relu'))
     model.add(Dense(64,kernel_initializer='normal', activation='relu'))
     model.add(Dense(32,kernel_initializer='normal', activation='relu'))
     #Output Layer
