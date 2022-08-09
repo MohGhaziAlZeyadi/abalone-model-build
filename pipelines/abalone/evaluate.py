@@ -58,11 +58,11 @@ if __name__ == "__main__":
     print('x test', x_test.shape,'y test', y_test.shape)
     
     
-    #model_load = tf.keras.models.load_model(args.sm_model_dir + '/1')
-    #model_load = tf.saved_model.load(args.sm_model_dir + '/1')
-    
-    #model_path = "/opt/ml/model/1"
-    model_load = tf.keras.models.load_model("/opt/ml/model")
+    model_path = "/opt/ml/processing/model/model.tar.gz"
+    with tarfile.open(model_path) as tar:
+        tar.extractall(path=".")
+        
+    model_load = tf.keras.models.load_model("/opt/ml/processing/model/model.tar.gz")
     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
     print("\nTest MSE after loading the model :", scores_loaded)
     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
