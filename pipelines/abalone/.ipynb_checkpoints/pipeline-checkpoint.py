@@ -19,7 +19,16 @@
                                                . -(stop)
 
 Implements a get_pipeline(**kwargs) method.
+
+
 """
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+    
+    
+install("sagemaker==2.91.1")
+
 import os
 import boto3
 import sagemaker
