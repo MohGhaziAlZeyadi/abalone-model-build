@@ -82,7 +82,7 @@ if __name__ == "__main__":
     print(type(y_test))
     
     
-    
+    print("Evalaution Start...")
     scores = model_loded.evaluate(x_test, y_test, verbose=1)
     print("\nTest MSE :", scores)
 
