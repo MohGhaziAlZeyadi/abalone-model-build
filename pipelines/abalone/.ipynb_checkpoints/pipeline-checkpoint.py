@@ -206,8 +206,6 @@ def get_pipeline(
 
     # Where to store the trained model
     model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/model/"
-    #model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
-    #model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
 
     hyperparameters = {"epochs": 3 }

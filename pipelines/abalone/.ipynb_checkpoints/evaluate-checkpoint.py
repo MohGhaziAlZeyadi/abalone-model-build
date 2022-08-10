@@ -8,7 +8,12 @@ import pathlib
 import tarfile
 import argparse
 
+def parse_args():
 
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument('--batch_size', type=int, default=64)
+    
 
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
@@ -57,6 +62,9 @@ def model_summary(model):
 if __name__ == "__main__":
 
     install("tensorflow==2.4.1")
+     args, _ = parse_args()
+    
+    
     model_path = f"/opt/ml/processing/model/model.tar.gz"
     with tarfile.open(model_path, "r:gz") as tar:
         tar.extractall("./model")
@@ -66,8 +74,8 @@ if __name__ == "__main__":
     from tensorflow import keras
     from tensorflow.keras import optimizers
 
-    #model_loded = tf.keras.models.load_model("./model/1")
-    model_loded = tf.keras.models.load_model("./model/1", custom_objects=None, compile=True, options=None)
+    model_loded = tf.keras.models.load_model("./model/1")
+    #model_loded = tf.keras.models.load_model("./model/1", custom_objects=None, compile=True, options=None)
     #model_loded.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
     print(model_loded.summary())
     
@@ -84,7 +92,8 @@ if __name__ == "__main__":
     
     
     print("Evalaution Start...")
-    scores = model_loded.evaluate(x_test, y_test, verbose=1)
+    batch_size = args.batch_size
+    scores = model_loded.evaluate(x_test, y_test,  batch_size, verbose=1)
     print("\nTest MSE :", scores)
 
     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
