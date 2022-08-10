@@ -132,8 +132,8 @@ if __name__ == "__main__":
     print("\nTest MSE :", scores)
     
     # save model
-    model.save(args.sm_model_dir+ '/model/1')
-    print("The model saved into:- ", args.sm_model_dir+ '/model/1')
+    model.save(args.sm_model_dir+ '/1')
+    print("The model saved into:- ", args.sm_model_dir+ '/1')
     
     
     
