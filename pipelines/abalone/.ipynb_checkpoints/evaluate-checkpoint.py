@@ -70,6 +70,7 @@ def get_model():
 if __name__ == "__main__":
 
     install("tensorflow==2.4.1")
+    install("numpy==1.19.2")
     
     import tensorflow as tf    
     from tensorflow import keras
