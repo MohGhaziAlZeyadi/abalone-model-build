@@ -66,7 +66,8 @@ if __name__ == "__main__":
     from tensorflow import keras
     from tensorflow.keras import optimizers
 
-    model_loded = tf.keras.models.load_model("./model/1")
+    #model_loded = tf.keras.models.load_model("./model/1")
+    model_loded = tf.keras.models.load_model("./model/1", custom_objects=None, compile=True, options=None)
     #model_loded.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
     print(model_loded.summary())
     
