@@ -62,7 +62,7 @@ def model_summary(model):
 if __name__ == "__main__":
 
     install("tensorflow==2.4.1")
-     args, _ = parse_args()
+    args, _ = parse_args()
     
     
     model_path = f"/opt/ml/processing/model/model.tar.gz"
