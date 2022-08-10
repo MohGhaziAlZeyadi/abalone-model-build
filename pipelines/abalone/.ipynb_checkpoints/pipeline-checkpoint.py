@@ -277,6 +277,14 @@ def get_pipeline(
             ),
             ProcessingInput(
                 source=step_process.properties.ProcessingOutputConfig.Outputs[
+                    "train"
+                ].S3Output.S3Uri,
+                destination="/opt/ml/processing/train",
+                
+            ),
+            
+            ProcessingInput(
+                source=step_process.properties.ProcessingOutputConfig.Outputs[
                     "test"
                 ].S3Output.S3Uri,
                 destination="/opt/ml/processing/test",

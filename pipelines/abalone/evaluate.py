@@ -73,7 +73,6 @@ if __name__ == "__main__":
     
     
     install("numpy==1.19.2")
-    
     train_path = "/opt/ml/processing/train/"
     x_train = np.load(os.path.join(train_path, "x_train.npy"))
     y_train = np.load(os.path.join(train_path, "y_train.npy"))
