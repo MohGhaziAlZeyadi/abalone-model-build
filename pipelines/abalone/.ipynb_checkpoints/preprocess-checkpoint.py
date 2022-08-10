@@ -63,7 +63,7 @@ if __name__ == "__main__":
     
 
     # read in csv
-    df = pd.read_csv(fn, names=columns, header=None)
+    df = pd.read_csv(fn, names=columns, header=None, nrows=300)
 
     # drop the "Phone" feature column
     df = df.drop(["ocean_proximity"], axis=1)
