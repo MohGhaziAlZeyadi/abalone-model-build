@@ -133,11 +133,39 @@ if __name__ == "__main__":
     # save model
     model.save(args.sm_model_dir+ '/1')
     print("The model saved into:- ", args.sm_model_dir+ '/1')
+    
+    
     print("***************Loaded Model*******************")
 
-    model_load = tf.keras.models.load_model(args.sm_model_dir+ '/1')
-    print(model_load.summary())
-    scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
-    print("\nTest MSE after loading the model :", scores_loaded)
+#     model_load = tf.keras.models.load_model(args.sm_model_dir+ '/1')
+#     print(model_load.summary())
+#     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
+#     print("\nTest MSE after loading the model :", scores_loaded)
+
+    model_path = f"/opt/ml/processing/model/model.tar.gz"
+    with tarfile.open(model_path, "r:gz") as tar:
+        tar.extractall("./model")
+        
+        
+    import tensorflow as tf
+    from tensorflow import keras
+    from tensorflow.keras import optimizers
+
+    model_loded = tf.keras.models.load_model("./model/1")
+    model_loded.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
+    print(model_loded.summary())
+        
+    
+#     test_path = "/opt/ml/processing/test/"
+#     x_test = np.load(os.path.join(test_path, "x_test.npy"))
+#     y_test = np.load(os.path.join(test_path, "y_test.npy"))
+    
+#     print('x test', x_test.shape,'y test', y_test.shape)
+#     print(type(x_test))
+#     print(type(y_test))    
+    
+    
+    scores = model_loded.evaluate(x_test, y_test, verbose=1)
+    print("\nTest MSE :", scores)
     
     
