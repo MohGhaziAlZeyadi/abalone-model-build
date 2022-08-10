@@ -71,6 +71,12 @@ if __name__ == "__main__":
 
     install("tensorflow==2.4.1")
     
+    import tensorflow as tf    
+    from tensorflow import keras
+    from tensorflow.keras import Sequential
+    from tensorflow.keras.layers import Flatten, Dense, Softmax
+    from tensorflow.keras import optimizers
+    
     
     install("numpy==1.19.2")
     train_path = "/opt/ml/processing/train/"
@@ -89,15 +95,8 @@ if __name__ == "__main__":
 
     model = get_model()
     
-    
-    ##Compile the network 
-    ##optimizer = tf.keras.optimizers.SGD(learning_rate)
-    #model.compile(loss='mean_squared_error',optimizer='adam')
-    ##model.compile(optimizer=optimizer, loss='mse')
-
-    model.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
    
-    
+    model.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])    
     
     
     model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test))
