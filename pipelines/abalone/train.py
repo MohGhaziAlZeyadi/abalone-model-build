@@ -29,10 +29,11 @@ def parse_args():
 
     # data directories
     parser.add_argument('--train', type=str, default=os.environ.get('SM_CHANNEL_TRAIN'))
+    
     parser.add_argument('--test', type=str, default=os.environ.get('SM_CHANNEL_TEST'))
 
     # model directory
-    parser.add_argument('--sm-model-dir', type=str, default=os.environ.get('SM_MODEL_DIR'))
+    parser.add_argument('--sm-model-dir', type=str, default=os.environ.get('SM_MODEL_DIR')) #  A string that represents the path where the training job writes the model artifacts to. After training, artifacts in this directory are uploaded to S3 for model hosting.
 
     return parser.parse_known_args()
 
@@ -132,7 +133,8 @@ if __name__ == "__main__":
     
     # save model
     model.save(args.sm_model_dir+ '/1')
-    print("The model saved into:- ", args.sm_model_dir+ '/1')
+    print("The model saved into:- ", args.sm_model_dir+ 'model/1')
+    
     
     
 #     print("***************Loaded Model*******************")
