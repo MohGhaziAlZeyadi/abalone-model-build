@@ -7,6 +7,7 @@ import numpy as np
 import pathlib
 import tarfile
 import argparse
+import logging
 
 
 
@@ -93,23 +94,25 @@ if __name__ == "__main__":
    
 #     print("\nTest MSE :", scores)
     
-    fake_scores =  [3.9448723793029785, 3.9448723793029785, 1.7750808000564575]
+    logger.info("Performing predictions against test data.")
+    predictions = model_loded.predict(x_test)
 
-    # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
+    logger.debug("Calculating mean squared error.")
+    mse = mean_squared_error(y_test, predictions)
+    std = np.std(y_test - predictions)
     report_dict = {
         "regression_metrics": {
-            "mse": {"value": fake_scores, "standard_deviation": "NaN"},
+            "mse": {
+                "value": mse,
+                "standard_deviation": std
+            },
         },
     }
-    
-    print(report_dict)
+
     output_dir = "/opt/ml/processing/evaluation"
     pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
-    print("This done: pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)")
 
+    logger.info("Writing out evaluation report with mse: %f", mse)
     evaluation_path = f"{output_dir}/evaluation.json"
     with open(evaluation_path, "w") as f:
         f.write(json.dumps(report_dict))
-    print("Done")
-     
-    
