@@ -55,7 +55,7 @@ def model_summary(model):
 
 if __name__ == "__main__":
 
-    install("tensorflow==2.4.1")
+    install("tensorflow==2.9.1")
     model_path = f"/opt/ml/processing/model/model.tar.gz"
     with tarfile.open(model_path, "r:gz") as tar:
         tar.extractall("./model")
