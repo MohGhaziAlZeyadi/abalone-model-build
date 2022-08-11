@@ -8,7 +8,7 @@ import pathlib
 import tarfile
 import argparse
 import logging
-
+from sklearn.metrics import mean_squared_error
 
 
 def install(package):
