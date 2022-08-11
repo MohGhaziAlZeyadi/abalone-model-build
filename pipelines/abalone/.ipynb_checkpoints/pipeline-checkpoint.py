@@ -168,7 +168,7 @@ def get_pipeline(
     # Processing step for feature engineering
     #########################################
     sklearn_processor = SKLearnProcessor(
-        framework_version="1.0-1",
+        framework_version="0.23-1",
         instance_type=processing_instance_type,
         instance_count=processing_instance_count,
         base_job_name=f"{base_job_prefix}/sklearn-abalone-preprocess",  # choose any name
@@ -252,24 +252,15 @@ def get_pipeline(
     # Create SKLearnProcessor object.
     # The object contains information about what container to use, what instance type etc.
     
-#     framework_version = "0.23-1"
-#     evaluate_model_processor = SKLearnProcessor(
-#         framework_version=framework_version,
-#         instance_type="ml.m5.large",
-#         instance_count=1,
-#         base_job_name= f"{base_job_prefix}/script-abalone-eval",
-#         role=role,
-#     )
-    from sagemaker.tensorflow import TensorFlowProcessor
-
-    evaluate_model_processor = TensorFlowProcessor(
-        framework_version='2.3',
-        role=role,
-        instance_type='ml.m5.xlarge',
+    framework_version = "0.23-1"
+    evaluate_model_processor = SKLearnProcessor(
+        framework_version=framework_version,
+        instance_type="ml.m5.large",
         instance_count=1,
         base_job_name= f"{base_job_prefix}/script-abalone-eval",
-        py_version='py37',
+        role=role,
     )
+    
 
     # Create a PropertyFile
     # A PropertyFile is used to be able to reference outputs from a processing step, for instance to use in a condition step.

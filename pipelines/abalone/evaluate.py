@@ -10,46 +10,46 @@ import argparse
 
 
 
-# def install(package):
-#     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
     
-# def model_summary(model):
-#     # Iterate over model layers
-#     for layer in model.layers:
-#         print(layer.name, layer)
+def model_summary(model):
+    # Iterate over model layers
+    for layer in model.layers:
+        print(layer.name, layer)
 
-#     # firstlayer
-#     print(model.layers[0].weights)
-#     print(model.layers[0].bias.numpy())
-#     print(model.layers[0].bias_initializer)
+    # firstlayer
+    print(model.layers[0].weights)
+    print(model.layers[0].bias.numpy())
+    print(model.layers[0].bias_initializer)
 
-#     # secondlayer
-#     print(model.layers[1].weights)
-#     print(model.layers[1].bias.numpy())
-#     print(model.layers[1].bias_initializer)
+    # secondlayer
+    print(model.layers[1].weights)
+    print(model.layers[1].bias.numpy())
+    print(model.layers[1].bias_initializer)
 
-#     # 3rdlayer
-#     print(model.layers[2].weights)
-#     print(model.layers[2].bias.numpy())
-#     print(model.layers[2].bias_initializer)
+    # 3rdlayer
+    print(model.layers[2].weights)
+    print(model.layers[2].bias.numpy())
+    print(model.layers[2].bias_initializer)
     
-#     # lastlayer
-#     print(model.layers[3].weights)
-#     print(model.layers[3].bias.numpy())
-#     print(model.layers[3].bias_initializer)
+    # lastlayer
+    print(model.layers[3].weights)
+    print(model.layers[3].bias.numpy())
+    print(model.layers[3].bias_initializer)
 
-#     # firstlayer by name
-#     print((model.get_layer("1stlayer").weights))
+    # firstlayer by name
+    print((model.get_layer("1stlayer").weights))
 
-#     # secondlayer by name
-#     print((model.get_layer("2ndlayer").weights))
+    # secondlayer by name
+    print((model.get_layer("2ndlayer").weights))
     
-#     # 3rdlayer by name
-#     print((model.get_layer("3rdlayer").weights))
+    # 3rdlayer by name
+    print((model.get_layer("3rdlayer").weights))
 
-#     # lastlayer by name
-#     print((model.get_layer("lastlayer").weights))
+    # lastlayer by name
+    print((model.get_layer("lastlayer").weights))
 
 
 
