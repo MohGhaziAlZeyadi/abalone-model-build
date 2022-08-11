@@ -95,9 +95,6 @@ if __name__ == "__main__":
     
     install("tensorflow==2.4.1")
 
-    install("numpy==1.19.2")
-    
-
     args, _ = parse_args()
 
     print('Training data location: {}'.format(args.train))
