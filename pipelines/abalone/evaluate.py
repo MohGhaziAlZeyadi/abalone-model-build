@@ -56,7 +56,7 @@ def model_summary(model):
 
 if __name__ == "__main__":
 
-    #install("tensorflow==2.4.1")
+    install("tensorflow==2.4.1")
     model_path = f"/opt/ml/processing/model/model.tar.gz"
     with tarfile.open(model_path, "r:gz") as tar:
         tar.extractall("./model")
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     #model_loded.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
     print(model_loded.summary())
     
-    #model_summary(model_loded)
+    model_summary(model_loded)
     
     
     test_path = "/opt/ml/processing/test/"
