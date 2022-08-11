@@ -84,7 +84,7 @@ if __name__ == "__main__":
     
     print("Evalaution Start...")
     batch_size = 64
-    scores = model_loded.evaluate(x_test, y_test, batch_size,verbose=1)
+    scores = model_loded.evaluate(x_test, y_test, batch_size, verbose=1)
     print("\nTest MSE :", scores)
 
     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
