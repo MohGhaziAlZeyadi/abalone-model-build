@@ -264,7 +264,7 @@ def get_pipeline(
 
     evaluate_model_processor = TensorFlowProcessor(
         framework_version='2.3',
-        role=get_execution_role(),
+        role=role,
         instance_type='ml.m5.xlarge',
         instance_count=1,
         base_job_name= f"{base_job_prefix}/script-abalone-eval",
