@@ -86,7 +86,8 @@ if __name__ == "__main__":
     print('x test', x_test.shape,'y test', y_test.shape)
     print(type(x_test))
     print(type(y_test))
-    
+  
+
     
 #     print("Evalaution Start...")
 #     batch_size = 64
