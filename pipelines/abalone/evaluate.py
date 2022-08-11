@@ -52,58 +52,39 @@ def model_summary(model):
     print((model.get_layer("lastlayer").weights))
 
 
-def get_model():
-    model = Sequential()
-    #Input Layer
-    model.add(Dense(8, activation='relu', input_dim = 8, name="1stlayer"))
-
-    #Hidden Layer
-    model.add(Dense(64,kernel_initializer='normal', activation='relu', name="2ndlayer"))
-    model.add(Dense(32,kernel_initializer='normal', activation='relu', name="3rdlayer"))
-    #Output Layer
-    model.add(Dense(1,kernel_initializer='normal', activation = 'relu',  name="lastlayer"))
-    
-    return model
-
 
 
 if __name__ == "__main__":
 
     install("tensorflow==2.4.1")
-    install("numpy==1.19.2")
-    
-    import tensorflow as tf    
+    model_path = f"/opt/ml/processing/model/model.tar.gz"
+    with tarfile.open(model_path, "r:gz") as tar:
+        tar.extractall("./model")
+        
+        
+    import tensorflow as tf
     from tensorflow import keras
-    from tensorflow.keras import Sequential
-    from tensorflow.keras.layers import Flatten, Dense, Softmax
     from tensorflow.keras import optimizers
+
+    #model_loded = tf.keras.models.load_model("./model/1")
+    model_loded = tf.keras.models.load_model("./model/1", custom_objects=None, compile=True, options=None)
+    #model_loded.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
+    print(model_loded.summary())
     
+    model_summary(model_loded)
     
-    install("numpy==1.19.2")
-    train_path = "/opt/ml/processing/train/"
-    x_train = np.load(os.path.join(train_path, "x_train.npy"))
-    y_train = np.load(os.path.join(train_path, "y_train.npy"))
     
     test_path = "/opt/ml/processing/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))
     y_test = np.load(os.path.join(test_path, "y_test.npy"))
-
-    batch_size = 64
-    epochs = 3
-    learning_rate = 0.01
-    print('batch_size = {}, epochs = {}, learning rate = {}'.format(batch_size, epochs, learning_rate))
-
-
-    model = get_model()
     
-   
-    model.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])    
+    print('x test', x_test.shape,'y test', y_test.shape)
+    print(type(x_test))
+    print(type(y_test))
     
     
-    model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test))
-
-    # evaluate on test set
-    scores = model.evaluate(x_test, y_test, batch_size, verbose=1)
+    print("Evalaution Start...")
+    scores = model_loded.evaluate(x_test, y_test, verbose=1)
     print("\nTest MSE :", scores)
 
     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html

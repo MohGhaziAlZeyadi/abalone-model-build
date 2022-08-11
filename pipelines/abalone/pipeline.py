@@ -246,15 +246,29 @@ def get_pipeline(
     #####################################
 
     from sagemaker.workflow.properties import PropertyFile
+    
+    
 
     # Create SKLearnProcessor object.
     # The object contains information about what container to use, what instance type etc.
-    framework_version = "0.23-1"
-    evaluate_model_processor = SKLearnProcessor(
-        framework_version=framework_version,
-        instance_type="ml.m5.large",
+    
+#     framework_version = "0.23-1"
+#     evaluate_model_processor = SKLearnProcessor(
+#         framework_version=framework_version,
+#         instance_type="ml.m5.large",
+#         instance_count=1,
+#         base_job_name= f"{base_job_prefix}/script-abalone-eval",
+#         role=role,
+#     )
+    from sagemaker.tensorflow import TensorFlowProcessor
+
+    evaluate_model_processor = TensorFlowProcessor(
+        framework_version='2.3',
+        role=get_execution_role(),
+        instance_type='ml.m5.xlarge',
         instance_count=1,
         base_job_name= f"{base_job_prefix}/script-abalone-eval",
+        py_version='py37',
         role=role,
     )
 
@@ -273,13 +287,6 @@ def get_pipeline(
             ProcessingInput(
                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
                 destination="/opt/ml/processing/model",
-                
-            ),
-            ProcessingInput(
-                source=step_process.properties.ProcessingOutputConfig.Outputs[
-                    "train"
-                ].S3Output.S3Uri,
-                destination="/opt/ml/processing/train",
                 
             ),
             
