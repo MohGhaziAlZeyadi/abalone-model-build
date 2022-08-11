@@ -87,11 +87,11 @@ if __name__ == "__main__":
     print(type(y_test))
     
     
-    print("Evalaution Start...")
-    batch_size = 64
-    scores = model_loded.evaluate(x_test, y_test, batch_size, verbose=1)
+#     print("Evalaution Start...")
+#     batch_size = 64
+#     scores = model_loded.evaluate(x_test, y_test, batch_size, verbose=1)
    
-    print("\nTest MSE :", scores)
+#     print("\nTest MSE :", scores)
     
     fake_scores =  [3.9448723793029785, 3.9448723793029785, 1.7750808000564575]
 
