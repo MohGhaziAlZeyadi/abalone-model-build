@@ -101,12 +101,15 @@ if __name__ == "__main__":
             "mse": {"value": fake_scores, "standard_deviation": "NaN"},
         },
     }
-
+    
+    print(report_dict)
     output_dir = "/opt/ml/processing/evaluation"
     pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
+    print("This done: pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)")
 
     evaluation_path = f"{output_dir}/evaluation.json"
     with open(evaluation_path, "w") as f:
         f.write(json.dumps(report_dict))
+    print("Done")
      
     
