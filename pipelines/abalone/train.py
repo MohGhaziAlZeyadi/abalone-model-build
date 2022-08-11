@@ -126,8 +126,8 @@ if __name__ == "__main__":
     model.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
 
     # evaluate on test set
-    #scores = model.evaluate(x_test, y_test, batch_size, verbose=1)
-    scores = model.evaluate(x_test, y_test, verbose=1)
+    scores = model.evaluate(x_test, y_test, batch_size, verbose=1)
+    
     print("\nTest MSE :", scores)
     
     # save model
@@ -139,10 +139,10 @@ if __name__ == "__main__":
     
     
     
-#     print("***************Loaded Model*******************")
+    print("***************Loaded Model*******************")
 
-#     model_load = tf.keras.models.load_model(args.sm_model_dir+ '/1')
-#     print(model_load.summary())
-#     scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
-#     print("\nTest MSE after loading the model :", scores_loaded)
+    model_load = tf.keras.models.load_model(args.sm_model_dir+ '/1')
+    print(model_load.summary())
+    scores_loaded = model_load.evaluate(x_test, y_test, batch_size, verbose=1)
+    print("\nTest MSE after loading the model :", scores_loaded)
 

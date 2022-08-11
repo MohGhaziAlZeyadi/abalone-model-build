@@ -55,7 +55,7 @@ def model_summary(model):
 
 if __name__ == "__main__":
 
-    install("tensorflow==2.9.1")
+    install("tensorflow==2.4.1")
     model_path = f"/opt/ml/processing/model/model.tar.gz"
     with tarfile.open(model_path, "r:gz") as tar:
         tar.extractall("./model")
@@ -84,8 +84,8 @@ if __name__ == "__main__":
     
     print("Evalaution Start...")
     batch_size = 64
-    #scores = model_loded.evaluate(x_test, y_test, batch_size, verbose=1)
-    scores = model_loded.evaluate(x_test, y_test, verbose=1)
+    scores = model_loded.evaluate(x_test, y_test, batch_size, verbose=1)
+   
     print("\nTest MSE :", scores)
 
     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
