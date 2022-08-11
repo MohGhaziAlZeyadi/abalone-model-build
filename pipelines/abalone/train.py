@@ -93,7 +93,7 @@ def install(package):
 
 if __name__ == "__main__":
     
-    install("tensorflow==2.4.1")
+    install("tensorflow==2.9.1")
 
     args, _ = parse_args()
 
@@ -122,10 +122,12 @@ if __name__ == "__main__":
     
     
     
-    model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test))
+    #model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test))
+    model.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
 
     # evaluate on test set
-    scores = model.evaluate(x_test, y_test, batch_size, verbose=1)
+    #scores = model.evaluate(x_test, y_test, batch_size, verbose=1)
+    scores = model.evaluate(x_test, y_test, verbose=1)
     print("\nTest MSE :", scores)
     
     # save model
