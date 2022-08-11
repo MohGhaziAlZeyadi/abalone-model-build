@@ -93,6 +93,12 @@ def install(package):
 
 if __name__ == "__main__":
     
+    print("Python version")
+    print (sys.version)
+    print("Version info.")
+    print (sys.version_info)
+    
+    
     install("tensorflow==2.4.1")
 
     args, _ = parse_args()

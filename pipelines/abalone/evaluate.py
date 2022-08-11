@@ -54,6 +54,11 @@ def model_summary(model):
 
 
 if __name__ == "__main__":
+    
+    print("Python version")
+    print (sys.version)
+    print("Version info.")
+    print (sys.version_info)
 
     install("tensorflow==2.4.1")
     model_path = f"/opt/ml/processing/model/model.tar.gz"

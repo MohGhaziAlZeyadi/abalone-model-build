@@ -260,6 +260,8 @@ def get_pipeline(
         base_job_name= f"{base_job_prefix}/script-abalone-eval",
         role=role,
         sagemaker_session=sagemaker_session,
+        
+        
     )
     
 

@@ -193,13 +193,13 @@ def get_pipeline(
 #     model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
         
-    image_uri = sagemaker.image_uris.retrieve(
-        framework="xgboost",  # we are using the Sagemaker built in xgboost algorithm
-        region=region,
-        version="1.0-1",
-        py_version="py3",
-        instance_type="ml.m5.large",
-    )
+#     image_uri = sagemaker.image_uris.retrieve(
+#         framework="xgboost",  # we are using the Sagemaker built in xgboost algorithm
+#         region=region,
+#         version="1.0-1",
+#         py_version="py3",
+#         instance_type="ml.m5.large",
+#     )
     
 
    
@@ -260,6 +260,8 @@ def get_pipeline(
         base_job_name= f"{base_job_prefix}/script-abalone-eval",
         role=role,
         sagemaker_session=sagemaker_session,
+        
+        
     )
     
 
