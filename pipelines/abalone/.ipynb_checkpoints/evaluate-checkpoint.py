@@ -101,6 +101,8 @@ if __name__ == "__main__":
     
     logger.info("Performing predictions against test data.")
     predictions = model_loded.predict(x_test)
+    
+    print("predictions: ", predictions)
 
     logger.debug("Calculating mean squared error.")
     mse = mean_squared_error(y_test, predictions)
