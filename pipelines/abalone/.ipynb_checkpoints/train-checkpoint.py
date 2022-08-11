@@ -93,7 +93,7 @@ def install(package):
 
 if __name__ == "__main__":
     
-    install("tensorflow==2.9.1")
+    install("tensorflow==2.4.1")
 
     args, _ = parse_args()
 
