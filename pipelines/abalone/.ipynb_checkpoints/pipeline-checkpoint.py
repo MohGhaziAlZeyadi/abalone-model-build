@@ -269,7 +269,6 @@ def get_pipeline(
         instance_count=1,
         base_job_name= f"{base_job_prefix}/script-abalone-eval",
         py_version='py37',
-        role=role,
     )
 
     # Create a PropertyFile
