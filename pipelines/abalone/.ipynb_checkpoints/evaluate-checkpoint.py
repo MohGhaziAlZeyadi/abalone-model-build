@@ -10,6 +10,10 @@ import argparse
 import logging
 from sklearn.metrics import mean_squared_error
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler())
+
 
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
