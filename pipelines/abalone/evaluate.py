@@ -88,8 +88,12 @@ if __name__ == "__main__":
     y_test = np.load(os.path.join(test_path, "y_test.npy"))
     
     print('x test', x_test.shape,'y test', y_test.shape)
-    print(type(x_test))
-    print(type(y_test))
+    
+    print("type(x_test): ", type(x_test))
+    print("(x_test): ",(x_test))
+    
+    print("type(y_test)", type(y_test))
+    print("(y_test)", (y_test))
   
 
     
