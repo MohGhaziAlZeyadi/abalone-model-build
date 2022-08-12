@@ -335,7 +335,7 @@ def get_pipeline(
         left=JsonGet(
             step_name=step_eval.name,
             property_file=evaluation_report,
-            json_path="binary_classification_metrics.accuracy.value",  # This should follow the structure of your report_dict defined in the evaluate.py file.
+            json_path="regression_metrics.mse.value",  # This should follow the structure of your report_dict defined in the evaluate.py file.
         ),
         right=0.04,  # You can change the threshold here
     )
