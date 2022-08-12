@@ -111,13 +111,16 @@ if __name__ == "__main__":
     logger.debug("Calculating mean squared error.")
     mse = mean_squared_error(y_test, predictions)
     std = np.std(y_test - predictions)
+    
+    
+     # Available metrics to add to model: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
     report_dict = {
         "regression_metrics": {
             "mse": {
                 "value": mse,
                 "standard_deviation": std
-            },
-        },
+            }
+        }
     }
 
     output_dir = "/opt/ml/processing/evaluation"
@@ -127,3 +130,5 @@ if __name__ == "__main__":
     evaluation_path = f"{output_dir}/evaluation.json"
     with open(evaluation_path, "w") as f:
         f.write(json.dumps(report_dict))
+    logger.info("Processing Stage Done!")
+    
