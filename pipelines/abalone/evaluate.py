@@ -118,7 +118,7 @@ if __name__ == "__main__":
         "regression_metrics": {
             "mse": {
                 "value": mse,
-                "standard_deviation": std
+                "standard_deviation": "NaN"
             }
         }
     }
