@@ -27,6 +27,12 @@ logger.addHandler(logging.StreamHandler())
 
 
 
+def clean_dataset(df):
+    assert isinstance(df, pd.DataFrame), "df needs to be a pd.DataFrame"
+    df.dropna(inplace=True)
+    indices_to_keep = ~df.isin([np.nan, np.inf, -np.inf]).any(1)
+    return df[indices_to_keep].astype(np.float64)
+
 if __name__ == "__main__":
     logger.info("Starting preprocessing.")
     parser = argparse.ArgumentParser()
@@ -64,6 +70,8 @@ if __name__ == "__main__":
 
     # read in csv
     df = pd.read_csv(fn, names=columns, header=None, nrows=300)
+    df = clean_dataset(df)
+    logger.info("Clean Dataset Done.")
 
     # drop the "Phone" feature column
     df = df.drop(["ocean_proximity"], axis=1)
