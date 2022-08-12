@@ -70,11 +70,13 @@ if __name__ == "__main__":
 
     # read in csv
     df = pd.read_csv(fn, names=columns, header=None, nrows=300)
-    df = clean_dataset(df)
-    logger.info("Clean Dataset Done.")
+    
 
     # drop the "Phone" feature column
     df = df.drop(["ocean_proximity"], axis=1)
+    
+    df = clean_dataset(df)
+    logger.info("Clean Dataset Done.")
     
     print(df.head(10))
     print (df.dtypes)
