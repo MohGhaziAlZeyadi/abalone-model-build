@@ -134,6 +134,7 @@ def get_pipeline(
     role=None,
     default_bucket=None,
     model_package_group_name="AbalonePackageGroup",
+    project_id="SageMakerProjectId",
     pipeline_name="AbalonePipeline",
     base_job_prefix="Abalone",
     processing_instance_type="ml.m5.large",
@@ -163,6 +164,10 @@ def get_pipeline(
 )
     input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/CaliforniaHousingPricesData/data/housing.csv",# Change this to point to the s3 location of your raw input data.
     )
+    
+    processing_image_name = "sagemaker-{0}-processing-imagebuild".format(project_id)
+    training_image_name = "sagemaker-{0}-training-imagebuild".format(project_id)
+    inference_image_name = "sagemaker-{0}-inference-imagebuild".format(project_id)
     
     #########################################
     # Processing step for feature engineering
@@ -312,6 +317,18 @@ def get_pipeline(
             content_type="application/json",
         )
     )
+    
+    
+#     try:
+#         inference_image_uri = sagemaker_session.sagemaker_client.describe_image_version(ImageName=inference_image_name)['ContainerImage']
+#     except (sagemaker_session.sagemaker_client.exceptions.ResourceNotFound):
+#         inference_image_uri = sagemaker.image_uris.retrieve(
+#             framework="xgboost",
+#             region=region,
+#             version="1.0-1",
+#             py_version="py3",
+#             instance_type=inference_instance_type,
+#         )
 
     # Register model step that will be conditionally executed
     step_register = RegisterModel(
@@ -337,7 +354,7 @@ def get_pipeline(
             property_file=evaluation_report,
             json_path="regression_metrics.mse.value",  # This should follow the structure of your report_dict defined in the evaluate.py file.
         ),
-        right=0.04,  # You can change the threshold here
+        right=6.0,  # You can change the threshold here
     )
     step_cond = ConditionStep(
         name="CheckMSEAbaloneEvaluation",
