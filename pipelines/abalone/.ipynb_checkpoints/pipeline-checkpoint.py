@@ -318,17 +318,7 @@ def get_pipeline(
         )
     )
     
-    
-#     try:
-#         inference_image_uri = sagemaker_session.sagemaker_client.describe_image_version(ImageName=inference_image_name)['ContainerImage']
-#     except (sagemaker_session.sagemaker_client.exceptions.ResourceNotFound):
-#         inference_image_uri = sagemaker.image_uris.retrieve(
-#             framework="xgboost",
-#             region=region,
-#             version="1.0-1",
-#             py_version="py3",
-#             instance_type=inference_instance_type,
-#         )
+
 
     # Register model step that will be conditionally executed
     step_register = RegisterModel(
@@ -354,7 +344,7 @@ def get_pipeline(
             property_file=evaluation_report,
             json_path="regression_metrics.mse.value",  # This should follow the structure of your report_dict defined in the evaluate.py file.
         ),
-        right=6.0,  # You can change the threshold here
+        right=3.0,  # You can change the threshold here
     )
     step_cond = ConditionStep(
         name="CheckMSEAbaloneEvaluation",
