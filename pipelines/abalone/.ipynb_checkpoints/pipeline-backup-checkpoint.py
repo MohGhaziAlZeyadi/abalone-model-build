@@ -19,12 +19,7 @@
                                                . -(stop)
 
 Implements a get_pipeline(**kwargs) method.
-
-
 """
-
-
-
 import os
 import boto3
 import sagemaker
@@ -42,15 +37,10 @@ from sagemaker.workflow.pipeline import Pipeline
 from sagemaker.workflow.properties import PropertyFile
 from sagemaker.workflow.step_collections import RegisterModel
 from sagemaker.workflow.steps import ProcessingStep, TrainingStep
+
 from sagemaker.workflow.pipeline_context import PipelineSession
 
-from sagemaker.tensorflow import TensorFlow
-from sagemaker.workflow.steps import TrainingStep
-import time
-############################################################################################
-
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-
 
 
 def get_sagemaker_client(region):
@@ -134,11 +124,10 @@ def get_pipeline(
     role=None,
     default_bucket=None,
     model_package_group_name="AbalonePackageGroup",
-    project_id="SageMakerProjectId",
     pipeline_name="AbalonePipeline",
     base_job_prefix="Abalone",
-    processing_instance_type="ml.m5.large",
-    training_instance_type="ml.m5.large",
+    processing_instance_type="ml.m5.xlarge",
+    training_instance_type="ml.m5.xlarge",
 ):
     """Gets a SageMaker ML Pipeline instance working with on CustomerChurn data.
 
@@ -158,22 +147,15 @@ def get_pipeline(
 
     # Parameters for pipeline execution
     processing_instance_count = ParameterInteger(name="ProcessingInstanceCount", default_value=1)
-    training_instance_type = ParameterString(name="TrainingInstanceType",default_value="ml.m5.large")
-    model_approval_status = ParameterString(name="ModelApprovalStatus",default_value="PendingManualApproval",  
-                                            # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
+    training_instance_type = ParameterString(name="TrainingInstanceType", default_value="ml.m5.xlarge")
+    model_approval_status = ParameterString(name="ModelApprovalStatus",default_value="PendingManualApproval",  # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
 )
-    input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/CaliforniaHousingPricesData/data/housing.csv",# Change this to point to the s3 location of your raw input data.
+    input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/DEMO-xgboost-churn/data/RawData.csv",# Change this to point to the s3 location of your raw input data.
     )
-    
-    processing_image_name = "sagemaker-{0}-processing-imagebuild".format(project_id)
-    training_image_name = "sagemaker-{0}-training-imagebuild".format(project_id)
-    inference_image_name = "sagemaker-{0}-inference-imagebuild".format(project_id)
-    
-    #########################################
+
     # Processing step for feature engineering
-    #########################################
     sklearn_processor = SKLearnProcessor(
-        framework_version="0.23-1",
+        framework_version="1.0-1",
         instance_type=processing_instance_type,
         instance_count=processing_instance_count,
         base_job_name=f"{base_job_prefix}/sklearn-abalone-preprocess",  # choose any name
@@ -185,130 +167,96 @@ def get_pipeline(
         processor=sklearn_processor,
         outputs=[
             ProcessingOutput(output_name="train", source="/opt/ml/processing/train"),
+            ProcessingOutput(output_name="validation", source="/opt/ml/processing/validation"),
             ProcessingOutput(output_name="test", source="/opt/ml/processing/test"),
-             
         ],
         code=os.path.join(BASE_DIR, "preprocess.py"),
         job_arguments=["--input-data", input_data],
     )
 
-    ##############################################
+    
     # Training step for generating model artifacts
-    ##############################################
-#     model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
+    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/AbaloneTrain"
     
         
-#     image_uri = sagemaker.image_uris.retrieve(
-#         framework="xgboost",  # we are using the Sagemaker built in xgboost algorithm
-#         region=region,
-#         version="1.0-1",
-#         py_version="py3",
-#         instance_type="ml.m5.large",
-#     )
-    
-
-   
-
-    # Where to store the trained model
-    model_path = f"s3://{sagemaker_session.default_bucket()}/{base_job_prefix}/model/"
-    
-
-    hyperparameters = {"epochs": 30 }
-    tensorflow_version = "2.4.1"
-    python_version = "py37"
-
-    tf2_estimator = TensorFlow(
-        source_dir=BASE_DIR,
-        entry_point="train.py",
-        instance_type="ml.m5.large",
-        instance_count=1,
-        framework_version=tensorflow_version,
-        role=role,
-        base_job_name=f"{base_job_prefix}/abalone-train",
-        output_path=model_path,
-        hyperparameters=hyperparameters,
-        py_version=python_version,
+    image_uri = sagemaker.image_uris.retrieve(
+        framework="xgboost",  # we are using the Sagemaker built in xgboost algorithm
+        region=region,
+        version="1.0-1",
+        py_version="py3",
+        instance_type="ml.m5.xlarge",
     )
-
-    #Use the tf2_estimator in a Sagemaker pipelines ProcessingStep.
-    #NOTE how the input to the training job directly references the output of the previous step.
+    
+    
+    xgb_train = Estimator(
+        image_uri=image_uri,
+        instance_type=training_instance_type,
+        instance_count=1,
+        output_path=model_path,
+        base_job_name=f"{base_job_prefix}/abalone-train",
+        sagemaker_session=sagemaker_session,
+        role=role,
+    )
+    xgb_train.set_hyperparameters(
+        objective="binary:logistic",
+        num_round=50,
+        max_depth=5,
+        eta=0.2,
+        gamma=4,
+        min_child_weight=6,
+        subsample=0.7,
+        silent=0,
+    )
     step_train = TrainingStep(
-    name="TrainAbaloneModel",
-    estimator=tf2_estimator,
-    inputs={
-        "train":
-        TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["train"].S3Output.S3Uri,content_type="text/csv",),
+        name="TrainAbaloneModel",
+        estimator=xgb_train,
+        inputs={
+            "train":
+            TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["train"].S3Output.S3Uri,content_type="text/csv",),
             
-        "test":
-        TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["test"].S3Output.S3Uri,content_type="text/csv",),
+            "validation":
+            TrainingInput(s3_data=step_process.properties.ProcessingOutputConfig.Outputs["validation"].S3Output.S3Uri,content_type="text/csv",),
         },
     )
 
-    
-    
-    #####################################
     # Processing step for evaluation
-    #####################################
-
-    from sagemaker.workflow.properties import PropertyFile
-    
-    
-
-    # Create SKLearnProcessor object.
-    # The object contains information about what container to use, what instance type etc.
-    
-    framework_version = "0.23-1"
-    evaluate_model_processor = SKLearnProcessor(
-        framework_version=framework_version,
-        instance_type="ml.m5.large",
+    script_eval = ScriptProcessor(
+        image_uri=image_uri,
+        command=["python3"],
+        instance_type="ml.m5.xlarge",
         instance_count=1,
-        base_job_name= f"{base_job_prefix}/script-abalone-eval",
-        role=role,
+        base_job_name=f"{base_job_prefix}/script-abalone-eval",
         sagemaker_session=sagemaker_session,
-        
-        
+        role=role,
     )
-    
-
-    # Create a PropertyFile
-    # A PropertyFile is used to be able to reference outputs from a processing step, for instance to use in a condition step.
-    # For more information, visit https://docs.aws.amazon.com/sagemaker/latest/dg/build-and-manage-propertyfile.html
     evaluation_report = PropertyFile(
-        name="EvaluationReport", output_name="evaluation", path="evaluation.json"
+        name="EvaluationReport",
+        output_name="evaluation",
+        path="evaluation.json",
     )
-
-    # Use the evaluate_model_processor in a Sagemaker pipelines ProcessingStep.
     step_eval = ProcessingStep(
-        name= "EvaluateAbaloneModel",
-        processor=evaluate_model_processor,
+        name="CustomerChurnEval",
+        processor=script_eval,
         inputs=[
             ProcessingInput(
                 source=step_train.properties.ModelArtifacts.S3ModelArtifacts,
                 destination="/opt/ml/processing/model",
-                
             ),
-            
             ProcessingInput(
                 source=step_process.properties.ProcessingOutputConfig.Outputs[
                     "test"
                 ].S3Output.S3Uri,
                 destination="/opt/ml/processing/test",
-                
             ),
         ],
         outputs=[
             ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation"),
-             
         ],
         code=os.path.join(BASE_DIR, "evaluate.py"),
         property_files=[evaluation_report],
     )
-    
-    
-    #########################################################
+
     # Register model step that will be conditionally executed
-    #########################################################
-    
     model_metrics = ModelMetrics(
         model_statistics=MetricsSource(
             s3_uri="{}/evaluation.json".format(
@@ -317,34 +265,29 @@ def get_pipeline(
             content_type="application/json",
         )
     )
-    
-
 
     # Register model step that will be conditionally executed
     step_register = RegisterModel(
-        name="RegisterAbaloneModel",
-        estimator=tf2_estimator,
+        name="CustomerChurnRegisterModel",
+        estimator=xgb_train,
         model_data=step_train.properties.ModelArtifacts.S3ModelArtifacts,
         content_types=["text/csv"],
         response_types=["text/csv"],
-        inference_instances=["ml.m5.large", "ml.m5.large"],
+        inference_instances=["ml.t2.medium", "ml.m5.large"],
         transform_instances=["ml.m5.large"],
         model_package_group_name=model_package_group_name,
         approval_status=model_approval_status,
         model_metrics=model_metrics,
     )
-    
-    
-
 
     # Condition step for evaluating model quality and branching execution
     cond_lte = ConditionGreaterThanOrEqualTo(  # You can change the condition here
         left=JsonGet(
             step_name=step_eval.name,
             property_file=evaluation_report,
-            json_path="regression_metrics.mse.value",  # This should follow the structure of your report_dict defined in the evaluate.py file.
+            json_path="binary_classification_metrics.accuracy.value",  # This should follow the structure of your report_dict defined in the evaluate.py file.
         ),
-        right=25.0,  # You can change the threshold here
+        right=0.5,  # You can change the threshold here
     )
     step_cond = ConditionStep(
         name="CheckMSEAbaloneEvaluation",
