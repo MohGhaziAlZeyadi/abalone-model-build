@@ -127,14 +127,12 @@ def get_pipeline_custom_tags(new_tags, region, sagemaker_project_arn=None):
 
 
 
-
 def get_pipeline(
     region,
     sagemaker_project_arn=None,
     role=None,
     default_bucket=None,
     model_package_group_name="AbalonePackageGroup",
-    project_id="SageMakerProjectId",
     pipeline_name="AbalonePipeline",
     base_job_prefix="Abalone",
     processing_instance_type="ml.m5.large",
@@ -153,6 +151,7 @@ def get_pipeline(
     sagemaker_session = get_session(region, default_bucket)
     if role is None:
         role = sagemaker.session.get_execution_role(sagemaker_session)
+        print("role :", role)
         
     pipeline_session = get_pipeline_session(region, default_bucket)
 
@@ -165,9 +164,6 @@ def get_pipeline(
     input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/CaliforniaHousingPricesData/data/housing.csv",# Change this to point to the s3 location of your raw input data.
     )
     
-    processing_image_name = "sagemaker-{0}-processing-imagebuild".format(project_id)
-    training_image_name = "sagemaker-{0}-training-imagebuild".format(project_id)
-    inference_image_name = "sagemaker-{0}-inference-imagebuild".format(project_id)
     
     #########################################
     # Processing step for feature engineering
@@ -362,7 +358,8 @@ def get_pipeline(
             model_approval_status,
             input_data,
         ],
-        steps=[step_process, step_train, step_eval, step_cond],
+        #steps=[step_process, step_train, step_eval, step_cond],
+        steps=[step_process],
         sagemaker_session=sagemaker_session,
     )
     return pipeline

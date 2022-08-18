@@ -19,42 +19,42 @@ def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
     
-def model_summary(model):
-    # Iterate over model layers
-    for layer in model.layers:
-        print(layer.name, layer)
+# def model_summary(model):
+#     # Iterate over model layers
+#     for layer in model.layers:
+#         print(layer.name, layer)
 
-    # firstlayer
-    print(model.layers[0].weights)
-    print(model.layers[0].bias.numpy())
-    print(model.layers[0].bias_initializer)
+#     # firstlayer
+#     print(model.layers[0].weights)
+#     print(model.layers[0].bias.numpy())
+#     print(model.layers[0].bias_initializer)
 
-    # secondlayer
-    print(model.layers[1].weights)
-    print(model.layers[1].bias.numpy())
-    print(model.layers[1].bias_initializer)
+#     # secondlayer
+#     print(model.layers[1].weights)
+#     print(model.layers[1].bias.numpy())
+#     print(model.layers[1].bias_initializer)
 
-    # 3rdlayer
-    print(model.layers[2].weights)
-    print(model.layers[2].bias.numpy())
-    print(model.layers[2].bias_initializer)
+#     # 3rdlayer
+#     print(model.layers[2].weights)
+#     print(model.layers[2].bias.numpy())
+#     print(model.layers[2].bias_initializer)
     
-    # lastlayer
-    print(model.layers[3].weights)
-    print(model.layers[3].bias.numpy())
-    print(model.layers[3].bias_initializer)
+#     # lastlayer
+#     print(model.layers[3].weights)
+#     print(model.layers[3].bias.numpy())
+#     print(model.layers[3].bias_initializer)
 
-    # firstlayer by name
-    print((model.get_layer("1stlayer").weights))
+#     # firstlayer by name
+#     print((model.get_layer("1stlayer").weights))
 
-    # secondlayer by name
-    print((model.get_layer("2ndlayer").weights))
+#     # secondlayer by name
+#     print((model.get_layer("2ndlayer").weights))
     
-    # 3rdlayer by name
-    print((model.get_layer("3rdlayer").weights))
+#     # 3rdlayer by name
+#     print((model.get_layer("3rdlayer").weights))
 
-    # lastlayer by name
-    print((model.get_layer("lastlayer").weights))
+#     # lastlayer by name
+#     print((model.get_layer("lastlayer").weights))
 
 
 
@@ -78,22 +78,22 @@ if __name__ == "__main__":
     #model_loded = tf.keras.models.load_model("./model/1")
     model_loded = tf.keras.models.load_model("./model/1")
     #model_loded.compile(loss='mse', optimizer='adam', metrics=['mse','mae'])
-    print(model_loded.summary())
+    #print(model_loded.summary())
     
-    model_summary(model_loded)
+    #model_summary(model_loded)
     
     
     test_path = "/opt/ml/processing/test/"
     x_test = np.load(os.path.join(test_path, "x_test.npy"))
     y_test = np.load(os.path.join(test_path, "y_test.npy"))
     
-    print('x test', x_test.shape,'y test', y_test.shape)
+#     print('x test', x_test.shape,'y test', y_test.shape)
     
-    print("type(x_test): ", type(x_test))
-    print("(x_test): ",(x_test))
+#     print("type(x_test): ", type(x_test))
+#     print("(x_test): ",(x_test))
     
-    print("type(y_test)", type(y_test))
-    print("(y_test)", (y_test))
+#     print("type(y_test)", type(y_test))
+#     print("(y_test)", (y_test))
   
 
     
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     logger.info("Performing predictions against test data.")
     predictions = model_loded.predict(x_test)
     
-    print("predictions: ", predictions)
+    #print("predictions: ", predictions)
 
     logger.debug("Calculating mean squared error.")
     mse = mean_squared_error(y_test, predictions)
@@ -130,5 +130,5 @@ if __name__ == "__main__":
     evaluation_path = f"{output_dir}/evaluation.json"
     with open(evaluation_path, "w") as f:
         f.write(json.dumps(report_dict))
-    logger.info("Processing Stage Done!")
+    #logger.info("Processing Stage Done!")
     
