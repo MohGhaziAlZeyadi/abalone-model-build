@@ -500,7 +500,7 @@ def get_pipeline(
     deploy_model_lambda_function = Lambda(
         function_name=deploy_model_lambda_function_name,
         execution_role_arn=lambda_role,
-        script="./deploy_model_lambda.py",
+        script="abalone/deploy_model_lambda.py",
         handler="deploy_model_lambda.lambda_handler",
     )
 
