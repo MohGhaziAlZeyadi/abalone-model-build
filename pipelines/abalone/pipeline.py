@@ -54,11 +54,6 @@ BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 
-
-
-
-
-
 ###########################################################################################
 
 import boto3
@@ -474,7 +469,7 @@ def get_pipeline(
 
     model = TensorFlowModel(
         role=role,
-        model_data=step_train_model.properties.ModelArtifacts.S3ModelArtifacts,
+        model_data= step_train.properties.ModelArtifacts.S3ModelArtifacts,
         framework_version=tensorflow_version,
         sagemaker_session=sagemaker_session,
     )
