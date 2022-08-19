@@ -23,8 +23,6 @@ Implements a get_pipeline(**kwargs) method.
 
 """
 
-
-
 import os
 import boto3
 import sagemaker
@@ -156,10 +154,14 @@ def get_pipeline(
     pipeline_session = get_pipeline_session(region, default_bucket)
 
     # Parameters for pipeline execution
+    
+    # Inference step parameters
+    endpoint_instance_type = ParameterString(name="EndpointInstanceType", default_value="ml.m5.large")
     processing_instance_count = ParameterInteger(name="ProcessingInstanceCount", default_value=1)
     training_instance_type = ParameterString(name="TrainingInstanceType",default_value="ml.m5.large")
     model_approval_status = ParameterString(name="ModelApprovalStatus",default_value="PendingManualApproval",  
                                             # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
+                
 )
     input_data = ParameterString( name="InputDataUrl",default_value=f"s3://sagemaker-eu-west-2-692736957113/sagemaker/CaliforniaHousingPricesData/data/housing.csv",# Change this to point to the s3 location of your raw input data.
     )
@@ -301,15 +303,46 @@ def get_pipeline(
     )
     
     
+    
+    ########################################################
+    #########Send E-Mail Lambda Step########################
+    ########################################################
+    
+    from iam_helper import create_s3_lambda_role
+
+    lambda_role = create_s3_lambda_role("send-email-to-ds-team-lambda-role")
+    
+    from sagemaker.workflow.lambda_step import LambdaStep
+    from sagemaker.lambda_helper import Lambda
+
+    evaluation_s3_uri = "{}/evaluation.json".format(
+    step_evaluate_model.arguments["ProcessingOutputConfig"]["Outputs"][0]["S3Output"]["S3Uri"]
+    )
+
+    send_email_lambda_function_name = "sagemaker-send-email-to-ds-team-lambda-" + current_time
+
+    send_email_lambda_function = Lambda(
+        function_name=send_email_lambda_function_name,
+        execution_role_arn=lambda_role,
+        script="send_email_lambda.py",
+        handler="send_email_lambda.lambda_handler",
+    )
+
+    step_higher_mse_send_email_lambda = LambdaStep(
+        name="Send-Email-To-DS-Team",
+        lambda_func=send_email_lambda_function,
+        inputs={"evaluation_s3_uri": evaluation_s3_uri},
+    )  
+    
+    
+    
     #########################################################
     # Register model step that will be conditionally executed
     #########################################################
     
     model_metrics = ModelMetrics(
-        model_statistics=MetricsSource(
-            s3_uri="{}/evaluation.json".format(
-                step_eval.arguments["ProcessingOutputConfig"]["Outputs"][0]["S3Output"]["S3Uri"]
-            ),
+            model_statistics=MetricsSource(
+            s3_uri="{}/evaluation.json".format(step_eval.arguments["ProcessingOutputConfig"]["Outputs"][0]["S3Output"]["S3Uri"]),
             content_type="application/json",
         )
     )
@@ -331,6 +364,67 @@ def get_pipeline(
     )
     
     
+    
+    ############################################################
+    ################Create the model############################
+    ############################################################
+    from sagemaker.workflow.step_collections import CreateModelStep
+    from sagemaker.tensorflow.model import TensorFlowModel
+
+    model = TensorFlowModel(
+        role=role,
+        model_data=step_train_model.properties.ModelArtifacts.S3ModelArtifacts,
+        framework_version=tensorflow_version,
+        sagemaker_session=sagemaker_session,
+    )
+
+    step_create_model = CreateModelStep(
+        name="Create-California-Housing-Model",
+        model=model,
+        inputs=sagemaker.inputs.CreateModelInput(instance_type="ml.m5.large"),
+    )
+    
+    
+    
+    ##############################################################
+    ###########Deploy model to SageMaker Endpoint Lambda Step#####
+    ##############################################################
+    
+    from iam_helper import create_sagemaker_lambda_role
+
+    lambda_role = create_sagemaker_lambda_role("deploy-model-lambda-role")
+    
+    from sagemaker.workflow.lambda_step import LambdaStep
+    from sagemaker.lambda_helper import Lambda
+
+    endpoint_config_name = "tf2-california-housing-endpoint-config"
+    endpoint_name = "tf2-california-housing-endpoint-" + current_time
+
+    deploy_model_lambda_function_name = "sagemaker-deploy-model-lambda-" + current_time
+
+    deploy_model_lambda_function = Lambda(
+        function_name=deploy_model_lambda_function_name,
+        execution_role_arn=lambda_role,
+        script="deploy_model_lambda.py",
+        handler="deploy_model_lambda.lambda_handler",
+    )
+
+    step_lower_mse_deploy_model_lambda = LambdaStep(
+        name="Deploy-California-Housing-Model-To-Endpoint",
+        lambda_func=deploy_model_lambda_function,
+            inputs={
+            "model_name": step_create_model.properties.ModelName,
+            "endpoint_config_name": endpoint_config_name,
+            "endpoint_name": endpoint_name,
+            "endpoint_instance_type": endpoint_instance_type,
+        },
+    )
+    
+    
+    
+    
+    
+    
 
 
     # Condition step for evaluating model quality and branching execution
@@ -348,18 +442,23 @@ def get_pipeline(
         if_steps=[step_register],
         else_steps=[],
     )
+    
+    
+    
+    
 
     # Pipeline instance
     pipeline = Pipeline(
         name=pipeline_name,
         parameters=[
+            endpoint_instance_type
             processing_instance_count,
             training_instance_type,
             model_approval_status,
             input_data,
         ],
-        #steps=[step_process, step_train, step_eval, step_cond],
-        steps=[step_process],
+        steps=[step_process, step_train, step_eval, step_cond],
+        #steps=[step_process],
         sagemaker_session=sagemaker_session,
     )
     return pipeline

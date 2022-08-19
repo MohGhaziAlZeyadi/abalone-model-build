@@ -69,7 +69,7 @@ if __name__ == "__main__":
     
 
     # read in csv
-    df = pd.read_csv(fn, names=columns, header=None, nrows=1000)
+    df = pd.read_csv(fn, names=columns, header=None)
     
 
     # drop the "Phone" feature column
