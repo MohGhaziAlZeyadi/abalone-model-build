@@ -169,7 +169,6 @@ def get_sagemaker_client(region):
 
 
 
-
 def get_session(region, default_bucket):
     """Gets the sagemaker session based on the region.
 
