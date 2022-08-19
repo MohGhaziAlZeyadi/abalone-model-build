@@ -45,7 +45,7 @@ from sagemaker.workflow.pipeline_context import PipelineSession
 from sagemaker.tensorflow import TensorFlow
 from sagemaker.workflow.steps import TrainingStep
 import time
-import iam_helper *
+import iam_helper 
 from iam_helper import create_s3_lambda_role
 ############################################################################################
 
