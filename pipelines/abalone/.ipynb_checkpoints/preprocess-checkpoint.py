@@ -69,7 +69,7 @@ if __name__ == "__main__":
     
 
     # read in csv
-    df = pd.read_csv(fn, names=columns, header=None)
+    df = pd.read_csv(fn, names=columns, header=None, nrows=1000)
     
 
     # drop the "Phone" feature column
@@ -78,9 +78,7 @@ if __name__ == "__main__":
     df = clean_dataset(df)
     logger.info("Clean Dataset Done.")
     
-    print(df.head(10))
-    print (df.dtypes)
-    
+
     X = df[
     [
         "longitude",
@@ -97,15 +95,6 @@ if __name__ == "__main__":
     
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
 
-#     x_train_without_standardized, x_test_without_standardized, y_train, y_test = train_test_split(X, Y, test_size=0.33)
-    
-#     mean = np.mean(x_train_without_standardized, axis=0)
-#     std = np.std(x_train_without_standardized, axis=0)+0.000001
-
-#     x_train = (x_train_without_standardized - mean) / std
-#     x_test = (x_test_without_standardized - mean) /std
-    
-    
     
     np.save(os.path.join(f"{base_dir}/train/", "x_train.npy"), x_train)
     np.save(os.path.join(f"{base_dir}/train/", "y_train.npy"), y_train)
