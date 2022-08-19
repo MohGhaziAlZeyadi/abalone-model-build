@@ -169,7 +169,6 @@ def get_sagemaker_client(region):
 
 
 
-
 def get_session(region, default_bucket):
     """Gets the sagemaker session based on the region.
 
@@ -417,7 +416,7 @@ def get_pipeline(
     from sagemaker.lambda_helper import Lambda
 
     evaluation_s3_uri = "{}/evaluation.json".format(
-    step_evaluate_model.arguments["ProcessingOutputConfig"]["Outputs"][0]["S3Output"]["S3Uri"]
+    step_eval.arguments["ProcessingOutputConfig"]["Outputs"][0]["S3Output"]["S3Uri"]
     )
 
     send_email_lambda_function_name = "sagemaker-send-email-to-ds-team-lambda-" + current_time
