@@ -23,8 +23,6 @@ Implements a get_pipeline(**kwargs) method.
 
 """
 
-
-
 import os
 import boto3
 import sagemaker
