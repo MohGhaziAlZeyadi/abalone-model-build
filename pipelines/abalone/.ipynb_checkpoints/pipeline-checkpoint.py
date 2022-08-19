@@ -420,7 +420,7 @@ def get_pipeline(
     send_email_lambda_function = Lambda(
         function_name=send_email_lambda_function_name,
         execution_role_arn=lambda_role,
-        script="send_email_lambda.py",
+        script="pipelines/send_email_lambda.py",
         handler="send_email_lambda.lambda_handler",
     )
 
