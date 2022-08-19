@@ -45,6 +45,7 @@ from sagemaker.workflow.pipeline_context import PipelineSession
 from sagemaker.tensorflow import TensorFlow
 from sagemaker.workflow.steps import TrainingStep
 import time
+from iam_helper import create_s3_lambda_role
 ############################################################################################
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -308,7 +309,6 @@ def get_pipeline(
     #########Send E-Mail Lambda Step########################
     ########################################################
     
-    from iam_helper import create_s3_lambda_role
 
     lambda_role = create_s3_lambda_role("send-email-to-ds-team-lambda-role")
     
