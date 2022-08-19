@@ -45,8 +45,8 @@ from sagemaker.workflow.pipeline_context import PipelineSession
 from sagemaker.tensorflow import TensorFlow
 from sagemaker.workflow.steps import TrainingStep
 import time
-import iam_helper 
 from iam_helper import create_s3_lambda_role
+from iam_helper import create_sagemaker_lambda_role
 ############################################################################################
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -391,7 +391,6 @@ def get_pipeline(
     ###########Deploy model to SageMaker Endpoint Lambda Step#####
     ##############################################################
     
-    from iam_helper import create_sagemaker_lambda_role
 
     lambda_role = create_sagemaker_lambda_role("deploy-model-lambda-role")
     
