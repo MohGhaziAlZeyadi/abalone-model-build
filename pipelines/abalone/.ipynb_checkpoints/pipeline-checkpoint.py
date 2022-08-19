@@ -518,10 +518,10 @@ def get_pipeline(
     
     
     
-    
-    
-
-
+    ##########################################################################
+    from sagemaker.workflow.conditions import ConditionLessThanOrEqualTo
+    from sagemaker.workflow.condition_step import ConditionStep
+    from sagemaker.workflow.functions import JsonGet
     # Condition step for evaluating model quality and branching execution
     cond_lte = ConditionGreaterThanOrEqualTo(  # You can change the condition here
         left=JsonGet(
@@ -534,8 +534,8 @@ def get_pipeline(
     step_cond = ConditionStep(
         name="CheckMSEAbaloneEvaluation",
         conditions=[cond_lte],
-        if_steps=[step_register],
-        else_steps=[],
+        if_steps=[step_register, step_create_model, step_lower_mse_deploy_model_lambda],
+        else_steps=[step_higher_mse_send_email_lambda],
     )
     
     
