@@ -44,9 +44,10 @@ from sagemaker.workflow.pipeline_context import PipelineSession
 
 from sagemaker.tensorflow import TensorFlow
 from sagemaker.workflow.steps import TrainingStep
+
 import time
-#from iam_helper import create_s3_lambda_role
-#from iam_helper import create_sagemaker_lambda_role
+current_time = time.strftime("%m-%d-%H-%M-%S", time.localtime())
+
 ############################################################################################
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
