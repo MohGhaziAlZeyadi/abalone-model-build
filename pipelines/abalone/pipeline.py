@@ -529,7 +529,7 @@ def get_pipeline(
             property_file=evaluation_report,
             json_path="regression_metrics.mse.value",  # This should follow the structure of your report_dict defined in the evaluate.py file.
         ),
-        right=0.10,  # You can change the threshold here
+        right=7.00,  # You can change the threshold here
     )
     step_cond = ConditionStep(
         name="CheckMSEAbaloneEvaluation",
